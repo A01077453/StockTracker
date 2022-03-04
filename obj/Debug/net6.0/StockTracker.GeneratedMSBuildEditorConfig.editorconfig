@@ -8,53 +8,53 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = StockTracker
 build_property.RootNamespace = StockTracker
-build_property.ProjectDir = /Users/gavin/Desktop/4870Project/StockTracker/
+build_property.ProjectDir = /Users/Johnny/Desktop/StockTracker/
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /Users/gavin/Desktop/4870Project/StockTracker
+build_property.MSBuildProjectDirectory = /Users/Johnny/Desktop/StockTracker
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/App.razor]
+[/Users/Johnny/Desktop/StockTracker/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Index.razor]
+[/Users/Johnny/Desktop/StockTracker/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Stocks.razor]
+[/Users/Johnny/Desktop/StockTracker/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/Johnny/Desktop/StockTracker/Pages/Stocks.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3RvY2tzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Shared/SurveyPrompt.razor]
+[/Users/Johnny/Desktop/StockTracker/Shared/SurveyPrompt.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/_Imports.razor]
+[/Users/Johnny/Desktop/StockTracker/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Shared/MainLayout.razor]
+[/Users/Johnny/Desktop/StockTracker/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-mg7sxpynq6
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Shared/NavMenu.razor]
+[/Users/Johnny/Desktop/StockTracker/Shared/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-7kftet9q0w
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Error.cshtml]
+[/Users/Johnny/Desktop/StockTracker/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/_Host.cshtml]
+[/Users/Johnny/Desktop/StockTracker/Pages/_Host.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/_Layout.cshtml]
+[/Users/Johnny/Desktop/StockTracker/Pages/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

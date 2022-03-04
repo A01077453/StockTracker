@@ -1,5 +1,5 @@
 {
-  "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/StockTracker.csproj",
+  "FilePath": "/Users/Johnny/Desktop/StockTracker/StockTracker.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "6.0",
@@ -11,72 +11,6 @@
   },
   "ProjectWorkspaceState": {
     "TagHelpers": [
-      {
-        "HashCode": 615728104,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Pages.Counter",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "Counter"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Pages.Counter"
-        }
-      },
-      {
-        "HashCode": -723431941,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Pages.Counter",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "StockTracker.Pages.Counter"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Pages.Counter",
-          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
-        }
-      },
-      {
-        "HashCode": 1614061140,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Pages.Index",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "Index"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Pages.Index"
-        }
-      },
-      {
-        "HashCode": 1378010213,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Pages.Index",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "StockTracker.Pages.Index"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Pages.Index",
-          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
-        }
-      },
       {
         "HashCode": -524510952,
         "Kind": "Components.Component",
@@ -111,88 +45,68 @@
         }
       },
       {
-        "HashCode": -577386618,
+        "HashCode": -587140341,
         "Kind": "Components.Component",
-        "Name": "StockTracker.App",
+        "Name": "StockTracker.Pages.Login",
         "AssemblyName": "StockTracker",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "App"
+            "TagName": "Login"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.App"
+          "Common.TypeName": "StockTracker.Pages.Login"
         }
       },
       {
-        "HashCode": -907012203,
+        "HashCode": -685966731,
         "Kind": "Components.Component",
-        "Name": "StockTracker.App",
+        "Name": "StockTracker.Pages.Login",
         "AssemblyName": "StockTracker",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "StockTracker.App"
+            "TagName": "StockTracker.Pages.Login"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.App",
+          "Common.TypeName": "StockTracker.Pages.Login",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
       {
-        "HashCode": -1229210517,
+        "HashCode": 1614061140,
         "Kind": "Components.Component",
-        "Name": "StockTracker.Shared.SurveyPrompt",
+        "Name": "StockTracker.Pages.Index",
         "AssemblyName": "StockTracker",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "SurveyPrompt"
-          }
-        ],
-        "BoundAttributes": [
-          {
-            "Kind": "Components.Component",
-            "Name": "Title",
-            "TypeName": "System.String",
-            "Metadata": {
-              "Common.PropertyName": "Title"
-            }
+            "TagName": "Index"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Shared.SurveyPrompt"
+          "Common.TypeName": "StockTracker.Pages.Index"
         }
       },
       {
-        "HashCode": -512739014,
+        "HashCode": 1378010213,
         "Kind": "Components.Component",
-        "Name": "StockTracker.Shared.SurveyPrompt",
+        "Name": "StockTracker.Pages.Index",
         "AssemblyName": "StockTracker",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "StockTracker.Shared.SurveyPrompt"
-          }
-        ],
-        "BoundAttributes": [
-          {
-            "Kind": "Components.Component",
-            "Name": "Title",
-            "TypeName": "System.String",
-            "Metadata": {
-              "Common.PropertyName": "Title"
-            }
+            "TagName": "StockTracker.Pages.Index"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Shared.SurveyPrompt",
+          "Common.TypeName": "StockTracker.Pages.Index",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -322,6 +236,92 @@
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
           "Common.TypeName": "StockTracker.Shared.NavMenu",
+          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
+        }
+      },
+      {
+        "HashCode": -1229210517,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.Shared.SurveyPrompt",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "SurveyPrompt"
+          }
+        ],
+        "BoundAttributes": [
+          {
+            "Kind": "Components.Component",
+            "Name": "Title",
+            "TypeName": "System.String",
+            "Metadata": {
+              "Common.PropertyName": "Title"
+            }
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.Shared.SurveyPrompt"
+        }
+      },
+      {
+        "HashCode": -512739014,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.Shared.SurveyPrompt",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "StockTracker.Shared.SurveyPrompt"
+          }
+        ],
+        "BoundAttributes": [
+          {
+            "Kind": "Components.Component",
+            "Name": "Title",
+            "TypeName": "System.String",
+            "Metadata": {
+              "Common.PropertyName": "Title"
+            }
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.Shared.SurveyPrompt",
+          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
+        }
+      },
+      {
+        "HashCode": -577386618,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.App",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "App"
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.App"
+        }
+      },
+      {
+        "HashCode": -907012203,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.App",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "StockTracker.App"
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.App",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -16612,59 +16612,59 @@
   "RootNamespace": "StockTracker",
   "Documents": [
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/Counter.razor",
-      "TargetPath": "Pages\\Counter.razor",
-      "FileKind": "component"
-    },
-    {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Shared/NavMenu.razor",
-      "TargetPath": "Shared\\NavMenu.razor",
-      "FileKind": "component"
-    },
-    {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/_Layout.cshtml",
-      "TargetPath": "Pages\\_Layout.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/_Host.cshtml",
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/_Host.cshtml",
       "TargetPath": "Pages\\_Host.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/Error.cshtml",
-      "TargetPath": "Pages\\Error.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Shared/SurveyPrompt.razor",
-      "TargetPath": "Shared\\SurveyPrompt.razor",
-      "FileKind": "component"
-    },
-    {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/Stocks.razor",
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/Stocks.razor",
       "TargetPath": "Pages\\Stocks.razor",
       "FileKind": "component"
     },
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/_Imports.razor",
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/Index.razor",
+      "TargetPath": "Pages\\Index.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Shared/SurveyPrompt.razor",
+      "TargetPath": "Shared\\SurveyPrompt.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/_Layout.cshtml",
+      "TargetPath": "Pages\\_Layout.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/Login.razor",
+      "TargetPath": "Pages\\Login.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/_Imports.razor",
       "TargetPath": "_Imports.razor",
       "FileKind": "componentImport"
     },
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Shared/MainLayout.razor",
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Shared/NavMenu.razor",
+      "TargetPath": "Shared\\NavMenu.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Shared/MainLayout.razor",
       "TargetPath": "Shared\\MainLayout.razor",
       "FileKind": "component"
     },
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/App.razor",
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/App.razor",
       "TargetPath": "App.razor",
       "FileKind": "component"
     },
     {
-      "FilePath": "/Users/gavin/Desktop/4870Project/StockTracker/Pages/Index.razor",
-      "TargetPath": "Pages\\Index.razor",
-      "FileKind": "component"
+      "FilePath": "/Users/Johnny/Desktop/StockTracker/Pages/Error.cshtml",
+      "TargetPath": "Pages\\Error.cshtml",
+      "FileKind": "mvc"
     }
   ],
   "SerializationFormat": "0.2"
