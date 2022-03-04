@@ -207,39 +207,6 @@
         }
       },
       {
-        "HashCode": -551141010,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Shared.NavMenu",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "NavMenu"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Shared.NavMenu"
-        }
-      },
-      {
-        "HashCode": -146513488,
-        "Kind": "Components.Component",
-        "Name": "StockTracker.Shared.NavMenu",
-        "AssemblyName": "StockTracker",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "StockTracker.Shared.NavMenu"
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "StockTracker.Shared.NavMenu",
-          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
-        }
-      },
-      {
         "HashCode": -1229210517,
         "Kind": "Components.Component",
         "Name": "StockTracker.Shared.SurveyPrompt",
@@ -289,6 +256,39 @@
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
           "Common.TypeName": "StockTracker.Shared.SurveyPrompt",
+          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
+        }
+      },
+      {
+        "HashCode": -551141010,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.Shared.NavMenu",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "NavMenu"
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.Shared.NavMenu"
+        }
+      },
+      {
+        "HashCode": -146513488,
+        "Kind": "Components.Component",
+        "Name": "StockTracker.Shared.NavMenu",
+        "AssemblyName": "StockTracker",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "StockTracker.Shared.NavMenu"
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "StockTracker.Shared.NavMenu",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
