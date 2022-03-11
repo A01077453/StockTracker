@@ -1,9 +1,49 @@
 ﻿@page "/"
+@using NewsAPI
+@using NewsAPI.Constants
+@using NewsAPI.Models
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="wrapper">
 
-Welcome to your new app.
+  <div class="chart">
+    <p>Chart place holder</p>
+  </div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+  <div class="favourites">
+    <h3>Favourites</h3>
+    <div>
+      <input type="search" name="" id="">
+      <button class="btn-dark">
+        <i class="oi oi-magnifying-glass"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+<div class="news">
+  <h3>News</h3>
+  <ul>
+    <li>
+      <a href="#">Apple</a>
+      <p>Apple had thei first press conference of 2022.</p>
+    </li>
+     <li>
+      <a href="#">Apple</a>
+      <p>Apple had thei first press conference of 2022.</p>
+    </li>
+     <li>
+      <a href="#">Apple</a>
+      <p>Apple had thei first press conference of 2022.</p>
+    </li>
+     <li>
+      <a href="#">Apple</a>
+      <p>Apple had thei first press conference of 2022.</p>
+    </li>
+     <li>
+      <a href="#">Apple</a>
+      <p>Apple had thei first press conference of 2022.</p>
+    </li>
+  </ul>
+</div>
