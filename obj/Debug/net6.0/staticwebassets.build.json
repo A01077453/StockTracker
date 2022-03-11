@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "QzKOzZmk6bI2IBiH+X3+AzBFAzxdDomT+YxdZ5vR+wE=",
+  "Hash": "O2PjZnvHT0x9M4V8Hn65GsM/jQfYmSp6tfVfCyjxnCM=",
   "Source": "StockTracker",
   "BasePath": "_content/StockTracker",
   "Mode": "Default",
@@ -51,6 +51,23 @@
       "OriginalItemSpec": "/Users/gavin/Desktop/4870Project/StockTracker/obj/Debug/net6.0/scopedcss/projectbundle/StockTracker.bundle.scp.css"
     },
     {
+      "Identity": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/css/bootstrap/bootstrap.css",
+      "SourceId": "StockTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/",
+      "BasePath": "_content/StockTracker",
+      "RelativePath": "css/bootstrap/bootstrap.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/bootstrap/bootstrap.css"
+    },
+    {
       "Identity": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/css/bootstrap/bootstrap.min.css",
       "SourceId": "StockTracker",
       "SourceType": "Discovered",
@@ -66,23 +83,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/bootstrap/bootstrap.min.css"
-    },
-    {
-      "Identity": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/css/bootstrap/bootstrap.min.css.map",
-      "SourceId": "StockTracker",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/",
-      "BasePath": "_content/StockTracker",
-      "RelativePath": "css/bootstrap/bootstrap.min.css.map",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/css/bootstrap/bootstrap.min.css.map"
     },
     {
       "Identity": "/Users/gavin/Desktop/4870Project/StockTracker/wwwroot/css/open-iconic/FONT-LICENSE",

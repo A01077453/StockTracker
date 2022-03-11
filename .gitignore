@@ -454,3 +454,4 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+bin/Debug/net6.0/StockTracker.dll

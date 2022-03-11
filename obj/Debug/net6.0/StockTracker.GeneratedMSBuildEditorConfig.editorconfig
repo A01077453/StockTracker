@@ -19,16 +19,16 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/gavin/Desktop/4870Project/StockTracker/Pages/FetchData.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmV0Y2hEYXRhLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/gavin/Desktop/4870Project/StockTracker/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/gavin/Desktop/4870Project/StockTracker/Pages/Stocks.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3RvY2tzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/gavin/Desktop/4870Project/StockTracker/Shared/SurveyPrompt.razor]
