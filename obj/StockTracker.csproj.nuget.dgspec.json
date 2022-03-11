@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Johnny/Desktop/StockTracker/StockTracker.csproj": {}
+    "/Users/gavin/Desktop/4870Project/StockTracker/StockTracker.csproj": {}
   },
   "projects": {
-    "/Users/Johnny/Desktop/StockTracker/StockTracker.csproj": {
+    "/Users/gavin/Desktop/4870Project/StockTracker/StockTracker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Johnny/Desktop/StockTracker/StockTracker.csproj",
+        "projectUniqueName": "/Users/gavin/Desktop/4870Project/StockTracker/StockTracker.csproj",
         "projectName": "StockTracker",
-        "projectPath": "/Users/Johnny/Desktop/StockTracker/StockTracker.csproj",
-        "packagesPath": "/Users/Johnny/.nuget/packages/",
-        "outputPath": "/Users/Johnny/Desktop/StockTracker/obj/",
+        "projectPath": "/Users/gavin/Desktop/4870Project/StockTracker/StockTracker.csproj",
+        "packagesPath": "/Users/gavin/.nuget/packages/",
+        "outputPath": "/Users/gavin/Desktop/4870Project/StockTracker/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/Johnny/.nuget/NuGet/NuGet.Config"
+          "/Users/gavin/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
