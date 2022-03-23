@@ -1,0 +1,62 @@
+@page "/news"
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
+@using Microsoft.Azure.CognitiveServices.Search.NewsSearch;
+@using Microsoft.Azure.CognitiveServices.Search.NewsSearch.Models;
+@using System;
+@using System.Linq;
+@using System.Text.Json
+@using System.Text.Json.Serialization;
+@using System.Net;
+@using System.Text.Json;
+
+<PageTitle>News Page</PageTitle>
+
+<label>Enter your search term:</label>
+
+@* <input type="text" @bind="searchString" @bind:event="oninput" class="form-control col-3" /> *@
+
+<div>@jsonRes</div>
+
+@code {
+  HttpClient httpClient = new HttpClient();
+  @* public List<Response> res = new List<Response>(); *@
+
+      private string jsonRes;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await GetPrices();
+  }
+
+  public async Task GetPrices()
+  {
+    // replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+            string QUERY_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey= LRIV8JF6611R73S9";
+            Uri queryUri = new Uri(QUERY_URL);
+
+            @* using (WebClient client = new WebClient())
+            {
+                 
+                 dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
+            Console.WriteLine($"This is data {json_data}");
+            } *@
+
+            
+                 HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+                 jsonRes = await response.Content.ReadAsStringAsync();
+                 @* jsonRes = await JsonSerializer.DeserializeAsync<Response>(responseBody); *@
+            Console.WriteLine($"This is data {jsonRes}");
+    
+  }
+
+  public class Response
+{
+    [JsonPropertyName("Meta Data")]
+    public string MetaData { get; set; }
+
+}
+
+}
+
+
