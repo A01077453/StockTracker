@@ -6,7 +6,6 @@
 @using System.Text.Json.Serialization;
 @using System.Text.Json;
 @using Newtonsoft.Json
-@using Blazorise
 
 @* HTML CONTENT *@
 <PageTitle>News Page</PageTitle>
@@ -16,17 +15,23 @@
 
   </div>
 
-  <div>
+  <div id="outerNewsContainer">
     @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
     @if(newsResults != null) {
       @foreach (var item in newsResults?.results)
       {
-        <div id="newsContainer">
-          <img src="@item.image_url" style="max-height: 400px; display: block; margin-left: auto; margin-right: auto">
-          <h3>@item.title</h3>
-          <p>@item.publisher.name | Date: @DateTimeOffset.Parse(@item.published_utc).UtcDateTime</p>
-          <p>URL: <a href=@item.article_url>@item.article_url</a></p>
-        </div>
+        <a href=@item.article_url>
+          <div id="newsContainer">
+            <div id="imageContainer">
+              <img id="newsImg" src="@item.image_url">
+            </div>
+            <h3>@item.title</h3>
+            <p style="text-decoration: none;">
+              <span style="color: royalblue"><b>@item.publisher.name</b></span>
+              | By: @item.author 
+              | Date: @DateTimeOffset.Parse(@item.published_utc).UtcDateTime.ToShortDateString()</p>
+          </div>
+        </a>
       }
     }
   </div>
@@ -35,7 +40,7 @@
 
 @code {
   HttpClient httpClient = new HttpClient();
-  private Newsaefea? newsResults;
+  private NewsObject? newsResults;
   private string? jsonRes;
 
   protected override async Task OnInitializedAsync()
@@ -43,9 +48,9 @@
     await GetResultsNews();
   }
 
-  public async Task<Newsaefea> GetResultsNews()
+  public async Task<NewsObject> GetResultsNews()
   {
-    @* API CALL: News (sorted by most recent first) *@
+    @* API CALL: News (sorted by most recent first), ticker to be dynamically  *@
     //Extra API KEY: 33H7QLES94CC8JMS
     string QUERY_URL =
         "https://api.polygon.io/v2/reference/news?ticker=AAPL&order=desc&limit=20&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
@@ -56,13 +61,13 @@
 
     jsonRes = await response.Content.ReadAsStringAsync(); //String
 
-    newsResults = JsonConvert.DeserializeObject<Newsaefea>(jsonRes);
+    newsResults = JsonConvert.DeserializeObject<NewsObject>(jsonRes);
 
     return await Task.FromResult(newsResults);  
   }
 
   @* ==============// MODELS for Returned JSON// ============== *@
-  public class Newsaefea
+  public class NewsObject
   {
     public int count { get; set; }
     public String? next_url { get; set; }
