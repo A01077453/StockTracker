@@ -1,0 +1,89 @@
+@page "/TestStock"
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
+@using System;
+@using System.Linq;
+@using System.Text.Json.Serialization;
+@using System.Text.Json;
+@using Newtonsoft.Json
+
+@* HTML CONTENT *@
+<PageTitle>Test Stock API</PageTitle>
+
+<h2>Apple (AAPL)</h2>
+@* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
+@if(currentStock != null) {
+  @foreach (var stat in currentStock?.results)
+  {
+    <p>High: @stat.h</p>
+    <p>Close: @stat.c</p>
+    <p>Opening: @stat.o</p>
+    <p>Low: @stat.l</p>
+  }
+}
+
+@code {
+  HttpClient httpClient = new HttpClient();
+  private Stock? currentStock;
+  private string? jsonRes;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await GetPrices();
+  }
+
+  public async Task<Stock> GetPrices()
+  {
+    @* API CALL: Stock Quote for Previous Day *@
+    string QUERY_URL =
+        "https://api.polygon.io/v2/aggs/ticker/AAPL/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+    Uri queryUri = new Uri(QUERY_URL);
+
+    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+    jsonRes = await response.Content.ReadAsStringAsync(); //String
+
+    currentStock = JsonConvert.DeserializeObject<Stock>(jsonRes);
+
+    return await Task.FromResult(currentStock);  
+  }
+
+  @* MODELS for Returned JSON *@
+  public class Stock
+  {
+    [JsonPropertyName("results")]
+    public Results[]? results { get; set; }
+  }
+
+   public class Results
+  {
+    public string? T { get; set; }
+    public double c { get; set; }
+    public double h { get; set; }
+    public double l { get; set; }
+    public double o { get; set; }
+    public double t { get; set; }
+    public double v { get; set; }
+    public double vw { get; set; }
+
+  }
+
+  public class InfoToStringConverter : JsonConverter<string>
+  {
+    public override string Read(
+    ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+      using (var jsonDoc = JsonDocument.ParseValue(ref reader))
+      {
+        return jsonDoc.RootElement.GetRawText();
+      }
+    }
+
+    public override void Write(
+    Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+}
