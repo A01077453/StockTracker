@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace StockTracker.Data;
-public class StockDbContext : DbContext
+public class StockDbContext : IdentityDbContext
 {
     #region Contructor
     public StockDbContext(DbContextOptions<StockDbContext> options)
