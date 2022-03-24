@@ -9,6 +9,28 @@
 @* HTML CONTENT *@
 <PageTitle>Test Stock API</PageTitle>
 
+     <div class="row px-3">
+        <div class="col-lg-6 p-3 d-flex">
+            <RadzenCard Style="width: 100%;">
+                <h4 class="mb-4">Horizontal Orientation</h4>
+                <RadzenCheckBoxList @bind-Value=@values TValue="int" Change=@(args => OnChange(args, "CheckBoxList with horizontal orientation"))>
+                    <Items>
+                        <RadzenCheckBoxListItem Text="Orders" Value="1" />
+                        <RadzenCheckBoxListItem Text="Employees" Value="2" />
+                        <RadzenCheckBoxListItem Text="Customers" Value="3" />
+                    </Items>
+                </RadzenCheckBoxList>
+                <h4 class="mt-4">Vertical Orientation</h4>
+                <RadzenCheckBoxList @bind-Value=@values TValue="int" Orientation="Orientation.Vertical" Change=@(args => OnChange(args, "CheckBoxList with vertical orientation"))>
+                    <Items>
+                        <RadzenCheckBoxListItem Text="Orders" Value="1" />
+                        <RadzenCheckBoxListItem Text="Employees" Value="2" />
+                        <RadzenCheckBoxListItem Text="Customers" Value="3" />
+                    </Items>
+                </RadzenCheckBoxList>
+            </RadzenCard>
+        </div>
+
 <h2>Apple (AAPL)</h2>
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
 @if(currentStock != null) {
