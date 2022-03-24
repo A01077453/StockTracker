@@ -11,6 +11,13 @@
 
 <label>Enter your search term:</label>
 
+@foreach (var stat in currentStock?.results)
+{
+  <p>High: @stat.h</p>
+  <p>Close: @stat.c</p>
+  <p>Opening: @stat.o</p>
+  <p>Low: @stat.l</p>
+}
 
 @code {
   HttpClient httpClient = new HttpClient();
@@ -34,15 +41,7 @@
 
     jsonRes = await response.Content.ReadAsStringAsync(); //String
 
-    this.currentStock = JsonConvert.DeserializeObject<Stock>(jsonRes);
-
-    foreach (var item in currentStock?.results)
-    {
-      Console.WriteLine($"Highest Price: {item.h}");
-      Console.WriteLine($"Closing Price: {item.c}");
-      Console.WriteLine($"Lowest Price: {item.l}");
-      Console.WriteLine($"Opening Price: {item.o}");
-    }
+    currentStock = JsonConvert.DeserializeObject<Stock>(jsonRes);
 
   }
 
