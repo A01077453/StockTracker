@@ -1,0 +1,12 @@
+#mainContentContainer {
+
+}
+
+#newsContainer {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px; 
+    width: 70%;
+    border: 2px solid rgb(177, 176, 176);
+    border-radius: 13px;
+}

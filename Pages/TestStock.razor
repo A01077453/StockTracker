@@ -7,10 +7,9 @@
 @using Newtonsoft.Json
 
 @* HTML CONTENT *@
-<PageTitle>News Page</PageTitle>
+<PageTitle>Test Stock API</PageTitle>
 
-<label>Enter your search term:</label>
-
+<h2>Apple (AAPL)</h2>
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
 @if(currentStock != null) {
   @foreach (var stat in currentStock?.results)
@@ -21,7 +20,6 @@
     <p>Low: @stat.l</p>
   }
 }
-
 
 @code {
   HttpClient httpClient = new HttpClient();
