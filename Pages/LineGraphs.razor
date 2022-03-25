@@ -3,10 +3,20 @@
 
   
 
-<h1>Radzen Blazor Chart with line series</h1>
+<RadzenCheckBoxList @bind-Value=@values TValue="int" Change=@OnChange>
+    <Items>
+        <RadzenCheckBoxListItem Text="High" Value="1" />
+        <RadzenCheckBoxListItem Text="Close" Value="2" />
+        <RadzenCheckBoxListItem Text="Opening" Value="3" />
+        <RadzenCheckBoxListItem Text="Low" Value="4" />
+    </Items>
+</RadzenCheckBoxList>
+
+
+
     <div class="container">
         <div class="row">
-            <div class="col-md-12 my-5" style="width:80em;">
+            <div class="col-md-12 my-5" style="width:80em; height:20em; @this.lineGraphSize">
                 <RadzenCard Class="w-100 mb-4" >
                     <RadzenCheckBox @bind-Value="@smooth" Name="smooth"></RadzenCheckBox>
                     <RadzenLabel Text="Smooth" For="smooth" Style="margin-left: 8px; vertical-align: middle;" />
@@ -35,6 +45,12 @@
     <link href="StockTracker.styles.css" rel="stylesheet" />
 
 @code {
+  
+    public string hi = "width:100em;";
+
+    [Parameter]
+    public string lineGraphSize { get; set; }
+
     bool smooth = false;
     class DataItem
     {
@@ -172,4 +188,12 @@
             Revenue = 394000
         }
     };
+
+     IEnumerable<int> values = new int[] { 1 };
+
+    void OnChange(IEnumerable<int> value)
+    {
+        Console.WriteLine($"Value changed to {string.Join(", ", value)}");
+    }
+
 }

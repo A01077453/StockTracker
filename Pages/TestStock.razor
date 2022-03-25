@@ -5,17 +5,20 @@
 @using System.Text.Json.Serialization;
 @using System.Text.Json;
 @using Newtonsoft.Json
+@using System.Collections;
+@using System.Collections.Generic;
 
 @* HTML CONTENT *@
 <PageTitle>Test Stock API</PageTitle>
 
 
-
-
-<h2>Apple (AAPL)</h2>
+<RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChange" /> 
+    <RadzenButton Click=@selectTicker Text="Submit" />
+     
+<h2> @this.mTickerName </h2>
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
-@if(currentStock != null) {
-  @foreach (var stat in currentStock?.results)
+@if(mCurrentStock != null) {
+  @foreach (var stat in mCurrentStock?.results)
   {
     <p>High: @stat.h</p>
     <p>Close: @stat.c</p>
@@ -25,49 +28,119 @@
 }
 
 @code {
-  HttpClient httpClient = new HttpClient();
-  private Stock? currentStock;
-  private string? jsonRes;
+    HttpClient httpClient = new HttpClient();
+    private Stock? mCurrentStock;
+    private Stock? mAllTickers;
+    private string? mTickerName;
+    private string? mJsonRes;
+    private List<string>? mTickersList = new List<string>();
 
-  protected override async Task OnInitializedAsync()
-  {
-    await GetPrices();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await defaultTicker();
+        await GetAllTickerNames();
+    }
+
+    public async Task<Stock> GetAllTickerNames()
+    {
+
+        string allTickerURL = "https://api.polygon.io/v3/reference/tickers?market=stocks&active=true&sort=market&order=asc&limit=1000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+         
+
+        string QUERY_URL;
+
+        QUERY_URL = allTickerURL;
+
+        Uri queryUri = new Uri(QUERY_URL);
+
+        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+        mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+        mAllTickers = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+        string? tickerName;
+
+        for(int i = 0; i < 999; i++)
+        {
+     
+            tickerName = this.mAllTickers.results[i].ticker.ToString();
+            mTickersList.Add(tickerName);
+        }
+
+    return await Task.FromResult(mAllTickers); 
+   
   }
 
-  public async Task<Stock> GetPrices()
-  {
-    @* API CALL: Stock Quote for Previous Day *@
-    string QUERY_URL =
-        "https://api.polygon.io/v2/aggs/ticker/AAPL/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+    public async Task<Stock> defaultTicker()
+    {
 
-    Uri queryUri = new Uri(QUERY_URL);
+        string ticker = "AAPL";
 
-    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+        string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + ticker + "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
-    jsonRes = await response.Content.ReadAsStringAsync(); //String
+        @* API CALL: Stock Quote for Previous Day *@
+        string QUERY_URL;
 
-    currentStock = JsonConvert.DeserializeObject<Stock>(jsonRes);
+        QUERY_URL = aaplDetail;
 
-    return await Task.FromResult(currentStock);  
+
+        Uri queryUri = new Uri(QUERY_URL);
+
+        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+        mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+        mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+
+    return await Task.FromResult(mCurrentStock); 
+   
   }
 
-  @* MODELS for Returned JSON *@
-  public class Stock
-  {
-    [JsonPropertyName("results")]
-    public Results[]? results { get; set; }
+   public async Task<Stock> selectTicker()
+    {
+        string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + this.mTickerName + "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+        @* API CALL: Stock Quote for Previous Day *@
+        string QUERY_URL;
+
+        QUERY_URL = aaplDetail;
+
+
+        Uri queryUri = new Uri(QUERY_URL);
+
+        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+        mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+        mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+
+    return await Task.FromResult(mCurrentStock); 
+   
   }
 
-   public class Results
-  {
-    public string? T { get; set; }
-    public double c { get; set; }
-    public double h { get; set; }
-    public double l { get; set; }
-    public double o { get; set; }
-    public double t { get; set; }
-    public double v { get; set; }
-    public double vw { get; set; }
+    @* MODELS for Returned JSON *@
+    public class Stock
+    {
+        [JsonPropertyName("results")]
+        public Results[]? results { get; set; }
+    }
+
+    public class Results
+    {
+        public string? T { get; set; }
+        public double c { get; set; }
+        public double h { get; set; }
+        public double l { get; set; }
+        public double o { get; set; }
+        public double t { get; set; }
+        public double v { get; set; }
+        public double vw { get; set; }
+        public string? ticker { get; set; }
 
   }
 
@@ -89,4 +162,12 @@
     }
   }
 
+   void OnChange(object value)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+            this.mTickerName = str.ToString();
+
+    }
+     
 }
