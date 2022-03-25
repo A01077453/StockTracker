@@ -54,4 +54,10 @@ app.MapBlazorHub();
 app.MapControllers();
 app.MapFallbackToPage("/_Host");
 
+using (var scope = app.Services.CreateScope()) {
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StockDbContext>();    
+    context.Database.Migrate();
+}
+
 app.Run();
