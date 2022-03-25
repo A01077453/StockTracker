@@ -8,15 +8,9 @@
   grid-template-columns: 2fr 1fr;
 }
 
-.chart {
-  border: 1px;
-  border-style: solid;
-  text-align: center;
-}
 .ourChart {
     border: 1px;
     border-style: solid;
-    text-align: center;
 }
 .favourites {
   width: 100%;
