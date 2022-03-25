@@ -8,10 +8,12 @@
   grid-template-columns: 2fr 1fr;
 }
 
-.ourChart {
-    border: 1px;
-    border-style: solid;
+.chart {
+  border: 1px;
+  border-style: solid;
+  text-align: center;
 }
+
 .favourites {
   width: 100%;
   text-align: center;
