@@ -30,8 +30,8 @@ public class StockDbContext : IdentityDbContext
     {
         return new List<Stock>
     {
-        new Stock {id = 1, ticker = "GME"},
-        new Stock {id = 2, ticker = "AAPL"}
+        new Stock {ticker = "GME"},
+        new Stock {ticker = "AAPL"}
     };
     }
     #endregion

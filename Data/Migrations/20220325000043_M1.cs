@@ -52,13 +52,12 @@ namespace StockTracker.Data.Migrations
                 name: "Stocks",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ticker = table.Column<string>(type: "TEXT", nullable: true)
+                    ticker = table.Column<string>(type: "TEXT", nullable: false),
+                    userId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stocks", x => x.id);
+                    table.PrimaryKey("PK_Stocks", x => x.ticker);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,13 +168,13 @@ namespace StockTracker.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Stocks",
-                columns: new[] { "id", "ticker" },
-                values: new object[] { 1, "GME" });
+                columns: new[] { "ticker", "userId" },
+                values: new object[] { "AAPL", null });
 
             migrationBuilder.InsertData(
                 table: "Stocks",
-                columns: new[] { "id", "ticker" },
-                values: new object[] { 2, "AAPL" });
+                columns: new[] { "ticker", "userId" },
+                values: new object[] { "GME", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

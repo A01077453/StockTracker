@@ -11,7 +11,7 @@ using StockTracker.Data;
 namespace StockTracker.Data.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20220324055834_M1")]
+    [Migration("20220325000043_M1")]
     partial class M1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,26 +217,23 @@ namespace StockTracker.Data.Migrations
 
             modelBuilder.Entity("StockTracker.Data.Stock", b =>
                 {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("ticker")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.Property<string>("userId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ticker");
 
                     b.ToTable("Stocks");
 
                     b.HasData(
                         new
                         {
-                            id = 1,
                             ticker = "GME"
                         },
                         new
                         {
-                            id = 2,
                             ticker = "AAPL"
                         });
                 });

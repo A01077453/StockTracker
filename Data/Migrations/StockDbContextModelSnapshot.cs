@@ -215,26 +215,23 @@ namespace StockTracker.Data.Migrations
 
             modelBuilder.Entity("StockTracker.Data.Stock", b =>
                 {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("ticker")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.Property<string>("userId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ticker");
 
                     b.ToTable("Stocks");
 
                     b.HasData(
                         new
                         {
-                            id = 1,
                             ticker = "GME"
                         },
                         new
                         {
-                            id = 2,
                             ticker = "AAPL"
                         });
                 });
