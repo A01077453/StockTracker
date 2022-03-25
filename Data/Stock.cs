@@ -1,7 +1,12 @@
-namespace StockTracker.Data;
-public class Stock {
+using System.ComponentModel.DataAnnotations;
 
-  public int id { get; set; }
+namespace StockTracker.Data;
+public class Stock
+{
+
+  [Key]
   public string? ticker { get; set; }
+
+  public string? userId { get; set; }
 
 }

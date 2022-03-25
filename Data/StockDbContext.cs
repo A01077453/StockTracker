@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace StockTracker.Data;
-public class StockDbContext : DbContext
+public class StockDbContext : IdentityDbContext
 {
     #region Contructor
     public StockDbContext(DbContextOptions<StockDbContext> options)
@@ -29,8 +30,8 @@ public class StockDbContext : DbContext
     {
         return new List<Stock>
     {
-        new Stock {id = 1, ticker = "GME"},
-        new Stock {id = 2, ticker = "AAPL"}
+        new Stock {ticker = "GME"},
+        new Stock {ticker = "AAPL"}
     };
     }
     #endregion
