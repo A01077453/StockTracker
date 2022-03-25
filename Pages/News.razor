@@ -12,11 +12,14 @@
 
 <div id="mainContentContainer">
   <div id="searchBarContainer">
-    <RadzenAutoComplete Placeholder="Search a Stock or Ticker" Data=@searchResultsArray TextProperty="symbol" Change=@(args => OnChange(args))
+      <RadzenAutoComplete Placeholder="Search a Stock or Ticker" Data=@searchResultsArray TextProperty="symbol" Change=@(args => OnChange(args))
       Style="width: 100%;" />
   </div>
 
   <div id="outerNewsContainer">
+    @if(searchResults?.bestMatches?.Length == 0) {
+      <p style="color: red">@errorMessage</p>
+    }
     @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
     @if (newsResults != null)
     {
@@ -46,24 +49,24 @@
   private NewsObject? newsResults;
   private Search? searchResults;
   private IEnumerable<Matches>? searchResultsArray;
-  private String? tickerNameFromForm;
+  private String? tickerNameFromForm;  
   private string? jsonRes;
   private string? jsonRes_two;
+  private String? errorMessage;
 
   protected override async Task OnInitializedAsync()
   {
     @* await GetResultsNews();
-      await GetAutoCompleteData(); *@
+    await GetAutoCompleteData(); *@
   }
 
   @* A Function that is called when page loads to GET data for specific ticker *@
-  public async Task<NewsObject> GetResultsNews(String tickerName)
+  public async Task<NewsObject> GetResultsNews(String? tickerName)
   {
     @* API CALL: News (sorted by most recent first), ticker to be dynamically *@
     //Extra API KEY: 33H7QLES94CC8JMS
     string QUERY_URL =
-    "https://api.polygon.io/v2/reference/news?ticker=" + tickerName +
-    "&order=desc&limit=20&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+    "https://api.polygon.io/v2/reference/news?ticker="+ tickerName +"&order=desc&limit=10&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
     Uri queryUri = new Uri(QUERY_URL);
 
@@ -77,11 +80,12 @@
   }
 
   @* A function that is called to get "AutoComplete" data *@
-  public async Task<Search> GetAutoCompleteData(String tickerName)
+  public async Task<Search> GetAutoCompleteData(String? tickerName)
   {
     @* API CALL: AutoComplete of Stock *@
+    //Extra API KEY: 33H7QLES94CC8JMS
     string QUERY_URL =
-        "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=" + tickerName + "&apikey=33H7QLES94CC8JMS";
+    "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="+ tickerName +"&apikey=33H7QLES94CC8JMS";
 
     Uri queryUri = new Uri(QUERY_URL);
 
@@ -90,34 +94,31 @@
     jsonRes_two = await response.Content.ReadAsStringAsync(); //String
 
     searchResults = JsonConvert.DeserializeObject<Search>(jsonRes_two); //Object
-
+  
+    if(searchResults.bestMatches?.Length == 0) {
+      this.errorMessage = "No search results have been found!";
+      Console.WriteLine(errorMessage);
+      return null;
+    }  
     //FOR REFERENCE:https://riptutorial.com/csharp/example/20150/arrays-as-ienumerable---instances
     searchResultsArray = searchResults.bestMatches; //Fill Array of Matches (For Autocomplete Data)
-
-    //Create a List of Strings (to hold all new items)
-    List<String>? tickerNames = new List<String>();
-
-    foreach (var item in searchResultsArray)
-    {
-      tickerNames.Add(item.symbol);
-    }
 
     return await Task.FromResult(searchResults);
   }
 
   @* A function used for AutoComplete Search Form *@
-  protected async Task OnChange(object value)
-  {
-    //Get String from TextField
-    var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+   protected async Task OnChange(object value)
+    {
+        //Get String from TextField
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-    this.tickerNameFromForm = str.ToString();
+        this.tickerNameFromForm = str.ToString();
 
-    await GetResultsNews(tickerNameFromForm);
-    await GetAutoCompleteData(tickerNameFromForm);
+        await GetResultsNews(tickerNameFromForm);
+        await GetAutoCompleteData(tickerNameFromForm);
 
-    Console.WriteLine($"Value changed to {this.tickerNameFromForm}");
-  }
+        Console.WriteLine($"Value changed to {this.tickerNameFromForm}");
+    }
 
   @* ==============// Models for News API// ============== *@
   public class NewsObject
