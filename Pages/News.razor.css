@@ -1,5 +1,12 @@
 #mainContentContainer {}
 
+#searchBarContainer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
 a, u {
     text-decoration: none;
     color: black;
