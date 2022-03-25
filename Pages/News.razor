@@ -6,21 +6,25 @@
 @using System.Text.Json.Serialization;
 @using System.Text.Json;
 @using Newtonsoft.Json
+@using System.Collections;
+@using System.Collections.Generic;
 
 @* HTML CONTENT *@
 <PageTitle>News Page</PageTitle>
 
-<div id="mainContentContainer">
+@*<div id="mainContentContainer">
   <div id="searchBarContainer">
 
   </div>
 
   <div id="outerNewsContainer">
-    @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
+   
     @if(newsResults != null) {
       @foreach (var item in newsResults?.results)
       {
-        <a href=@item.article_url>
+             
+
+                <a href=@item.article_url>
           <div id="newsContainer">
             <div id="imageContainer">
               <img id="newsImg" src="@item.image_url">
@@ -35,19 +39,71 @@
       }
     }
   </div>
-</div>
+</div>*@
+
+
+
+<RadzenDataList WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
+      
+                 <Template Context="oneNews">
+                       
+            <RadzenCard Style="width:300px;">
+                 <a href=@oneNews.article_url> 
+                <div class="d-flex flex-row align-items-center">
+                    <RadzenImage Path="@oneNews.image_url" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                    <div>
+                        <h4 class="mb-0">@(oneNews.title)</h4>
+                        <div>@oneNews.publisher.name</div>
+                     
+                    </div>
+                </div>
+                <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                <div class="row">
+                    <div class="col-md-8 text-truncate">
+                        <b> By: @oneNews.author </b>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@DateTimeOffset.Parse(@oneNews.published_utc).UtcDateTime.ToShortDateString() />
+                    </div>
+                </div>
+                 </a>
+            </RadzenCard>
+           
+        </Template>
+    </RadzenDataList>
+   
 
 
 @code {
-  HttpClient httpClient = new HttpClient();
-  private NewsObject? newsResults;
-  private string? jsonRes;
+    HttpClient httpClient = new HttpClient();
+    private NewsObject? newsResults;
+    private string? jsonRes;
+    private List<News.Results>? ListsomeOfNews = new List<News.Results>();
+    private IEnumerable<News.Results>? IEnumNews;
+   
+    protected override async Task OnInitializedAsync()
+    {
+        await GetResultsNews();
+        await storeNewsAsEnum();
 
-  protected override async Task OnInitializedAsync()
-  {
-    await GetResultsNews();
-  }
 
+    }
+
+    public async Task<int> storeNewsAsEnum()
+    {
+
+        for(int i = 0; i < newsResults.results.Count(); i++)
+        {
+            ListsomeOfNews.Add(newsResults?.results[i]);
+
+        }
+
+        IEnumNews = ListsomeOfNews as IEnumerable<News.Results>;
+
+        return 1;
+    }
+
+    
   public async Task<NewsObject> GetResultsNews()
   {
     @* API CALL: News (sorted by most recent first), ticker to be dynamically  *@
@@ -97,6 +153,14 @@
     public String? logo_url { get; set; }
     public String? name { get; set; }
   }
+
+    //void PageChanged(PagerEventArgs args)
+    //{
+    //    orders = GetOrders(args.Skip, args.Top);
+    //}
+
+    
+
 }
 
 @* =============// BELOW IS AN EXAMPLE JSON RESPONSE FOR NEWS API //=========== *@
