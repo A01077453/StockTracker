@@ -28,13 +28,19 @@
   }
 }
 
+
 <RadzenTemplateForm Data=@this>
-  <p>
+  
+
     <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
        <br />
-    <RadzenTextBox Name="mTickerNameWithTime" @bind-Value=@this.mTickerNameWithTime />
-    <RadzenRequiredValidator Component="mTickerNameWithTime" Text="First name is required!" />
-  </p>
+    <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChangeTickerNameWithTime" /> 
+  
+  <div >
+                            <RadzenLabel Text="Time Span"/>
+                        </div>
+
+                        <RadzenDropDownDataGrid TValue="string" Data=@(mStockTimeSpan.Select(c => c).Distinct()) Change="@OnChangeTickerTimeSpan" /> 
   <p>
     <RadzenLabel Component="Multipler" Text="Multipler" />
     <br />
@@ -70,6 +76,10 @@
     private string? mMultipler;
     private string? mTimeSpan;
    
+    private List<string>? mStockTimeSpan = new List<string> {"minute", "hour", "day", "week", "month", "quarter", "year"
+      };
+
+    
     private DateTime TTimeFrom;
     private DateTime TTimeTo;
     private string? mTimeFrom;
@@ -165,8 +175,6 @@
 
     public async Task<Stock> selectTickerWithTime()
     {
-       
-        mTimeSpan = "month";
         mTimeFrom = TTimeFrom.ToString().Substring(0,10);
         mTimeTo = TTimeTo.ToString().Substring(0,10);
 
@@ -187,7 +195,7 @@
 
         mSelectedStockWithTime = JsonConvert.DeserializeObject<Stock>(mJsonRes);
 
-      
+      Console.WriteLine(mJsonRes);
 
     return await Task.FromResult(mSelectedStockWithTime); 
    
@@ -241,4 +249,21 @@
 
     }
      
+     void OnChangeTickerNameWithTime(object value)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+            this.mTickerNameWithTime = str.ToString();
+
+    }
+
+    void OnChangeTickerTimeSpan(object value)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+
+            this.mTimeSpan = str.ToString();
+
+    }
+     
+    
 }
