@@ -37,3 +37,8 @@ li {
   display: list-item ;
   list-style: none;
 }
+
+#newsContainer {
+  padding-left: 20px;
+  padding-right: 20px;
+}
