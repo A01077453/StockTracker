@@ -13,8 +13,8 @@
 
 
 <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChange" /> 
-    <RadzenButton Click=@selectTicker Text="Submit" />
-     <RadzenButton Click=@selectTickerWithTime Text="selectTickerWithTime" />
+    <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" Click=@selectTicker Text="" />
+   
 
 <h2> @this.mTickerName </h2>
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
@@ -30,30 +30,32 @@
 
 <RadzenTemplateForm Data=@this>
   <p>
-    <RadzenLabel Component="TickerName" Text="Ticker Name" />
-    <RadzenTextBox Name="TickerName" @bind-Value=@this.mTickerName />
-    <RadzenRequiredValidator Component="TickerName" Text="First name is required!" />
+    <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
+       <br />
+    <RadzenTextBox Name="mTickerNameWithTime" @bind-Value=@this.mTickerNameWithTime />
+    <RadzenRequiredValidator Component="mTickerNameWithTime" Text="First name is required!" />
   </p>
   <p>
-    <RadzenLabel Component="Multipler" Text="multipler" />
+    <RadzenLabel Component="Multipler" Text="Multipler" />
+    <br />
     <RadzenTextBox Name="Multipler" @bind-Value=@this.mMultipler />
-    <RadzenRequiredValidator Component="Multipler" Text="Last name is required!" />
+    <RadzenRequiredValidator Component="Multipler" Text="Multipler is required!" />
   </p>
-   <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Date From" />
+   <div >
+                            <RadzenLabel Text="From" />
                         </div>
-                        <div class="col-md-8">
+                        <div >
                             <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateFrom" @bind-Value=@this.TTimeFrom />
                         </div>
-     <div class="col-md-4 align-items-center d-flex">
-                            <RadzenLabel Text="Date To" />
+     <div >
+                            <RadzenLabel Text="To" />
                         </div>
-                        <div class="col-md-8">
+                        <div >
                             <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateTo" @bind-Value=@this.TTimeTo />
                         </div>
 
 
-  <RadzenButton ButtonType="ButtonType.Submit" Click=@selectTickerWithTime Text="Save" />
+  <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" ButtonType="ButtonType.Submit" Click=@selectTickerWithTime Text="" />
 </RadzenTemplateForm>
 
 @code {
@@ -63,6 +65,7 @@
     private Stock? mAllTickers;
     private string? mTickerName;
     private string? mJsonRes;
+    private string? mTickerNameWithTime;
     private List<string>? mTickersList = new List<string>();
     private string? mMultipler;
     private string? mTimeSpan;
@@ -162,14 +165,13 @@
 
     public async Task<Stock> selectTickerWithTime()
     {
-        Console.WriteLine("TTimeFrom: " + TTimeFrom);
-        //mTickerName = "GM";
-        //mMultipler = "1";
+       
         mTimeSpan = "month";
-        mTimeFrom = TTimeFrom.ToString().Take(10);
-        mTimeTo = TTimeTo.ToString().Take(10);
+        mTimeFrom = TTimeFrom.ToString().Substring(0,10);
+        mTimeTo = TTimeTo.ToString().Substring(0,10);
 
-        string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerName  + "/range/" + mMultipler  + "/" + mTimeSpan +"/" + mTimeFrom + "/" + mTimeTo + "?adjusted=true&sort=asc&limit=120&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+        string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime  + "/range/" + mMultipler  + "/" + mTimeSpan +"/" + mTimeFrom + "/" + mTimeTo + "?adjusted=true&sort=asc&limit=120&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+
 
         @* API CALL: Stock Quote for Previous Day *@
         string QUERY_URL;
@@ -183,10 +185,9 @@
 
         mJsonRes = await response.Content.ReadAsStringAsync(); //String
 
-        Console.WriteLine("selectTickerWithTime" + mJsonRes);
-
         mSelectedStockWithTime = JsonConvert.DeserializeObject<Stock>(mJsonRes);
 
+      
 
     return await Task.FromResult(mSelectedStockWithTime); 
    
