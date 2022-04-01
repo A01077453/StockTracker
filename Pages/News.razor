@@ -8,6 +8,8 @@
 @using Newtonsoft.Json
 @using System.Collections;
 @using System.Collections.Generic;
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
 
 @* HTML CONTENT *@
 <PageTitle>News Page</PageTitle>
@@ -40,6 +42,9 @@
   }
   </div>
   </div>*@
+
+<RadzenTextBox @bind-Value=@mNewsTickerName TValue="string"  />
+<RadzenButton Click=@storeNewsAsEnum Text="Save" />
 
 <RadzenDataList WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
 
@@ -77,10 +82,11 @@
   private string? jsonRes;
   private List<News.Results>? ListsomeOfNews = new List<News.Results>();
   private IEnumerable<News.Results>? IEnumNews;
+  private string? mNewsTickerName;
 
   protected override async Task OnInitializedAsync()
   {
-    await GetResultsNews();
+    
     await storeNewsAsEnum();
 
 
@@ -88,6 +94,8 @@
 
   public async Task<int> storeNewsAsEnum()
   {
+
+  await GetResultsNews();
 
     for (int i = 0; i < newsResults.results.Count(); i++)
     {
@@ -105,8 +113,16 @@
   {
     @* API CALL: News (sorted by most recent first), ticker to be dynamically *@
     //Extra API KEY: 33H7QLES94CC8JMS
+
+
+    if(mNewsTickerName == null) {
+      mNewsTickerName = "AAPL";
+    }
+
     string QUERY_URL =
-    "https://api.polygon.io/v2/reference/news?ticker=AAPL&order=desc&limit=100&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+    "https://api.polygon.io/v2/reference/news?ticker=" + mNewsTickerName + "&order=desc&limit=100&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+Console.WriteLine(QUERY_URL);
 
     Uri queryUri = new Uri(QUERY_URL);
 
