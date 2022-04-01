@@ -11,218 +11,222 @@
 @* HTML CONTENT *@
 <PageTitle>Test Stock API</PageTitle>
 
- 
+<RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChange" />
+<RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" Click=@selectTicker Text="" />
 
-<RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChange" /> 
-    <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" Click=@selectTicker Text="" />
-  
-
-<h2> @this.mTickerName  <button> "Favortie" </button> </h2> 
+<h2> @this.mTickerName <button> "Favourite" </button> </h2>
 
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
-@if(mCurrentStock != null) {
-  @foreach (var stat in mCurrentStock?.results)
-  {
-    <p>High: @stat.h</p>
-    <p>Close: @stat.c</p>
-    <p>Opening: @stat.o</p>
-    <p>Low: @stat.l</p>
-  }
+@if (mCurrentStock != null)
+{
+  <div id="stockStatisticsContainer">
+    @foreach (var stat in mCurrentStock?.results)
+    {
+      <p>High: @stat.h</p>
+      <p>Close: @stat.c</p>
+      <p>Opening: @stat.o</p>
+      <p>Low: @stat.l</p>
+    }
+  </div>
 }
 
-
 <RadzenTemplateForm Data=@this>
-  
+  <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
+  <br />
+  <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct())
+    Change="@OnChangeTickerNameWithTime" />
 
-    <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
-       <br />
-    <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChangeTickerNameWithTime" /> 
-    
-  <div >
-                            <RadzenLabel Text="Time Span"/>
-                        </div>
+  <div>
+    <RadzenLabel Text="Time Span" />
+  </div>
 
-                        <RadzenDropDownDataGrid TValue="string" Data=@(mStockTimeSpan.Select(c => c).Distinct()) Change="@OnChangeTickerTimeSpan" /> 
+  <RadzenDropDownDataGrid TValue="string" Data=@(mStockTimeSpan.Select(c => c).Distinct())
+    Change="@OnChangeTickerTimeSpan" />
   <p>
     <RadzenLabel Component="Multipler" Text="Multipler" />
     <br />
     <RadzenTextBox Name="Multipler" @bind-Value=@this.mMultipler />
     <RadzenRequiredValidator Component="Multipler" Text="Multipler is required!" />
   </p>
-   <div >
-                            <RadzenLabel Text="From" />
-                        </div>
-                        <div >
-                            <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateFrom" @bind-Value=@this.TTimeFrom />
-                        </div>
-     <div >
-                            <RadzenLabel Text="To" />
-                        </div>
-                        <div >
-                            <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateTo" @bind-Value=@this.TTimeTo />
-                        </div>
+  <div>
+    <RadzenLabel Text="From" />
+  </div>
+  <div>
+    <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateFrom" @bind-Value=@this.TTimeFrom />
+  </div>
+  <div>
+    <RadzenLabel Text="To" />
+  </div>
+  <div>
+    <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateTo" @bind-Value=@this.TTimeTo />
+  </div>
 
-
-  <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" ButtonType="ButtonType.Submit" Click=@selectTickerWithTime Text="" />
+  <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" ButtonType="ButtonType.Submit"
+    Click=@selectTickerWithTime Text="" />
 </RadzenTemplateForm>
 
 @code {
-    HttpClient httpClient = new HttpClient();
-    private Stock? mCurrentStock;
-    private Stock? mSelectedStockWithTime;
-    private Stock? mAllTickers;
-    private string? mTickerName;
-    private string? mJsonRes;
-    private string? mTickerNameWithTime;
-    private List<string>? mTickersList = new List<string>();
-    private string? mMultipler;
-    private string? mTimeSpan;
-    private string? mFavoriteStock;
+  HttpClient httpClient = new HttpClient();
+  private Stock? mCurrentStock;
+  private Stock? mSelectedStockWithTime;
+  private Stock? mAllTickers;
+  private string? mTickerName;
+  private string? mJsonRes;
+  private string? mTickerNameWithTime;
+  private List<string>? mTickersList = new List<string>();
+  private string? mMultipler;
+  private string? mTimeSpan;
+  private string? mFavoriteStock;
 
-    private List<string>? mStockTimeSpan = new List<string> {"minute", "hour", "day", "week", "month", "quarter", "year"
-      };
-
-    
-    private DateTime TTimeFrom;
-    private DateTime TTimeTo;
-    private string? mTimeFrom;
-    private string? mTimeTo;
+  private List<string>? mStockTimeSpan = new List<string> {"minute", "hour", "day", "week", "month", "quarter", "year"
+};
 
 
+  private DateTime TTimeFrom;
+  private DateTime TTimeTo;
+  private string? mTimeFrom;
+  private string? mTimeTo;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await defaultTicker();
-        await GetAllTickerNames();
-    }
 
-    public async Task<Stock> GetAllTickerNames()
-    {
 
-        string allTickerURL = "https://api.polygon.io/v3/reference/tickers?market=stocks&active=true&sort=market&order=asc&limit=1000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
-         
-
-        string QUERY_URL;
-
-        QUERY_URL = allTickerURL;
-
-        Uri queryUri = new Uri(QUERY_URL);
-
-        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
-
-        mJsonRes = await response.Content.ReadAsStringAsync(); //String
-
-        mAllTickers = JsonConvert.DeserializeObject<Stock>(mJsonRes);
-
-        string? tickerName;
-
-        for(int i = 0; i < 999; i++)
-        {
-     
-            tickerName = this.mAllTickers.results[i].ticker.ToString();
-            mTickersList.Add(tickerName);
-        }
-
-    return await Task.FromResult(mAllTickers); 
-   
+  protected override async Task OnInitializedAsync()
+  {
+    await defaultTicker();
+    await GetAllTickerNames();
   }
 
-    public async Task<Stock> defaultTicker()
+  public async Task<Stock> GetAllTickerNames()
+  {
+
+    string allTickerURL =
+    "https://api.polygon.io/v3/reference/tickers?market=stocks&active=true&sort=market&order=asc&limit=1000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+
+
+    string QUERY_URL;
+
+    QUERY_URL = allTickerURL;
+
+    Uri queryUri = new Uri(QUERY_URL);
+
+    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+    mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+    mAllTickers = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+    string? tickerName;
+
+    for (int i = 0; i < 999; i++)
     {
 
-        string ticker = "AAPL";
-
-        string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + ticker + "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
-
-        @* API CALL: Stock Quote for Previous Day *@
-        string QUERY_URL;
-
-        QUERY_URL = aaplDetail;
-
-
-        Uri queryUri = new Uri(QUERY_URL);
-
-        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
-
-        mJsonRes = await response.Content.ReadAsStringAsync(); //String
-
-        mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
-
-
-    return await Task.FromResult(mCurrentStock); 
-   
-  }
-
-   public async Task<Stock> selectTicker()
-    {
-        string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + this.mTickerName + "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
-
-        @* API CALL: Stock Quote for Previous Day *@
-        string QUERY_URL;
-
-        QUERY_URL = aaplDetail;
-
-
-        Uri queryUri = new Uri(QUERY_URL);
-
-        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
-
-        mJsonRes = await response.Content.ReadAsStringAsync(); //String
-
-        mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
-
-
-        return await Task.FromResult(mCurrentStock); 
-
+      tickerName = this.mAllTickers.results[i].ticker.ToString();
+      mTickersList.Add(tickerName);
     }
 
-    public async Task<Stock> selectTickerWithTime()
-    {
-        mTimeFrom = TTimeFrom.ToString().Substring(0,10);
-        mTimeTo = TTimeTo.ToString().Substring(0,10);
+    return await Task.FromResult(mAllTickers);
 
-        string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime  + "/range/" + mMultipler  + "/" + mTimeSpan +"/" + mTimeFrom + "/" + mTimeTo + "?adjusted=true&sort=asc&limit=50000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+  }
+
+  public async Task<Stock> defaultTicker()
+  {
+
+    string ticker = "AAPL";
+
+    string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + ticker +
+    "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+    @* API CALL: Stock Quote for Previous Day *@
+    string QUERY_URL;
+
+    QUERY_URL = aaplDetail;
 
 
-        @* API CALL: Stock Quote for Previous Day *@
-        string QUERY_URL;
+    Uri queryUri = new Uri(QUERY_URL);
 
-        QUERY_URL = selectTickerWithTimeURL;
+    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+    mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+    mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
 
 
-        Uri queryUri = new Uri(QUERY_URL);
+    return await Task.FromResult(mCurrentStock);
 
-        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+  }
 
-        mJsonRes = await response.Content.ReadAsStringAsync(); //String
+  public async Task<Stock> selectTicker()
+  {
+    string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + this.mTickerName +
+    "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
-        mSelectedStockWithTime = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+    @* API CALL: Stock Quote for Previous Day *@
+    string QUERY_URL;
 
-      Console.WriteLine(mJsonRes);
+    QUERY_URL = aaplDetail;
 
-    return await Task.FromResult(mSelectedStockWithTime); 
-   
+
+    Uri queryUri = new Uri(QUERY_URL);
+
+    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+    mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+    mCurrentStock = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+
+    return await Task.FromResult(mCurrentStock);
+
+  }
+
+  public async Task<Stock> selectTickerWithTime()
+  {
+    mTimeFrom = TTimeFrom.ToString().Substring(0, 10);
+    mTimeTo = TTimeTo.ToString().Substring(0, 10);
+
+    string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime + "/range/" + mMultipler
+    + "/" + mTimeSpan + "/" + mTimeFrom + "/" + mTimeTo +
+    "?adjusted=true&sort=asc&limit=50000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
+
+
+    @* API CALL: Stock Quote for Previous Day *@
+    string QUERY_URL;
+
+    QUERY_URL = selectTickerWithTimeURL;
+
+
+    Uri queryUri = new Uri(QUERY_URL);
+
+    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+    mJsonRes = await response.Content.ReadAsStringAsync(); //String
+
+    mSelectedStockWithTime = JsonConvert.DeserializeObject<Stock>(mJsonRes);
+
+    Console.WriteLine(mJsonRes);
+
+    return await Task.FromResult(mSelectedStockWithTime);
+
   }
 
 
-    @* MODELS for Returned JSON *@
-    public class Stock
-    {
-        [JsonPropertyName("results")]
-        public Results[]? results { get; set; }
-    }
+  @* MODELS for Returned JSON *@
+  public class Stock
+  {
+    [JsonPropertyName("results")]
+    public Results[]? results { get; set; }
+  }
 
-    public class Results
-    {
-        public string? T { get; set; }
-        public double c { get; set; }
-        public double h { get; set; }
-        public double l { get; set; }
-        public double o { get; set; }
-        public double t { get; set; }
-        public double v { get; set; }
-        public double vw { get; set; }
-        public string? ticker { get; set; }
+  public class Results
+  {
+    public string? T { get; set; }
+    public double c { get; set; }
+    public double h { get; set; }
+    public double l { get; set; }
+    public double o { get; set; }
+    public double t { get; set; }
+    public double v { get; set; }
+    public double vw { get; set; }
+    public string? ticker { get; set; }
 
   }
 
@@ -244,29 +248,29 @@
     }
   }
 
-   void OnChange(object value)
-    {
-        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+  void OnChange(object value)
+  {
+    var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-            this.mTickerName = str.ToString();
+    this.mTickerName = str.ToString();
 
-    }
-     
-     void OnChangeTickerNameWithTime(object value)
-    {
-        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+  }
 
-            this.mTickerNameWithTime = str.ToString();
+  void OnChangeTickerNameWithTime(object value)
+  {
+    var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-    }
+    this.mTickerNameWithTime = str.ToString();
 
-    void OnChangeTickerTimeSpan(object value)
-    {
-        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+  }
 
-            this.mTimeSpan = str.ToString();
+  void OnChangeTickerTimeSpan(object value)
+  {
+    var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-    }
-     
-    
+    this.mTimeSpan = str.ToString();
+
+  }
+
+
 }

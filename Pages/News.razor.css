@@ -51,3 +51,8 @@ a, u {
     color: black;
     text-decoration: underline;
 }
+
+#newsTitleSearchContainer {
+    display: grid;
+    grid-template-columns: 7% 10% 10%;
+}
