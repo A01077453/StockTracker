@@ -14,39 +14,10 @@
 @* HTML CONTENT *@
 <PageTitle>News Page</PageTitle>
 
-@*<div id="mainContentContainer">
-  <div id="searchBarContainer">
-
-  </div>
-
-  <div id="outerNewsContainer">
-
-  @if(newsResults != null) {
-  @foreach (var item in newsResults?.results)
-  {
-
-
-  <a href=@item.article_url>
-  <div id="newsContainer">
-  <div id="imageContainer">
-  <img id="newsImg" src="@item.image_url">
-  </div>
-  <h3>@item.title</h3>
-  <p style="text-decoration: none;">
-  <span style="color: royalblue"><b>@item.publisher.name</b></span>
-  | By: @item.author
-  | Date: @DateTimeOffset.Parse(@item.published_utc).UtcDateTime.ToShortDateString()</p>
-  </div>
-  </a>
-  }
-  }
-  </div>
-  </div>*@
-
 <RadzenTextBox @bind-Value=@mNewsTickerName TValue="string"  />
-<RadzenButton Click=@storeNewsAsEnum Text="Save" />
+<RadzenButton Click=@storeNewsAsEnum Text="Search" />
 
-<RadzenDataList WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
+<RadzenDataList @ref="RadzenNewsDataList" WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
 
   <Template Context="oneNews">
 
@@ -77,35 +48,39 @@
 </RadzenDataList>
 
 @code {
-  HttpClient httpClient = new HttpClient();
-  private NewsObject? newsResults;
-  private string? jsonRes;
-  private List<News.Results>? ListsomeOfNews = new List<News.Results>();
-  private IEnumerable<News.Results>? IEnumNews;
-  private string? mNewsTickerName;
+    HttpClient httpClient = new HttpClient();
+    private RadzenDataList<News.Results> RadzenNewsDataList;
+    private NewsObject? newsResults;
+    private string? jsonRes;
+    private List<News.Results>? ListsomeOfNews = new List<News.Results>();
+    private IEnumerable<News.Results>? IEnumNews;
+    private string? mNewsTickerName;
 
-  protected override async Task OnInitializedAsync()
-  {
-    
-    await storeNewsAsEnum();
-
-
-  }
-
-  public async Task<int> storeNewsAsEnum()
-  {
-
-  await GetResultsNews();
-
-    for (int i = 0; i < newsResults.results.Count(); i++)
+    protected override async Task OnInitializedAsync()
     {
-      ListsomeOfNews.Add(newsResults?.results[i]);
+
+        await storeNewsAsEnum();
+
 
     }
 
-    IEnumNews = ListsomeOfNews as IEnumerable<News.Results>;
+    public async Task<int> storeNewsAsEnum()
+    {
 
-    return 1;
+        await GetResultsNews();
+
+        ListsomeOfNews.Clear();
+
+        for (int i = 0; i < newsResults.results.Count(); i++)
+        {
+            ListsomeOfNews.Add(newsResults?.results[i]);
+
+        }
+
+        IEnumNews = ListsomeOfNews as IEnumerable<News.Results>;
+
+        RadzenNewsDataList.FirstPage();
+        return 1;
   }
 
 
