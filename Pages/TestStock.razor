@@ -12,9 +12,10 @@
 <PageTitle>Test Stock API</PageTitle>
 
 <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct()) Change="@OnChange" />
-<RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" Click=@selectTicker Text="" />
 
-<h2> @this.mTickerName <button> "Favourite" </button> </h2>
+@* <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" Click=@selectTicker Text="" />
+
+<h2> @this.mTickerName <button> "Favourite" </button> </h2> *@
 
 @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
 @if (mCurrentStock != null)
@@ -31,7 +32,7 @@
 }
 
 <RadzenTemplateForm Data=@this>
-  <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
+  @* <RadzenLabel Component="mTickerNameWithTime" Text="Ticker Name" />
   <br />
   <RadzenDropDownDataGrid TValue="string" Data=@(mTickersList.Select(c => c).Distinct())
     Change="@OnChangeTickerNameWithTime" />
@@ -47,7 +48,8 @@
     <br />
     <RadzenTextBox Name="Multipler" @bind-Value=@this.mMultipler />
     <RadzenRequiredValidator Component="Multipler" Text="Multipler is required!" />
-  </p>
+  </p> *@
+  
   <div>
     <RadzenLabel Text="From" />
   </div>
@@ -61,8 +63,8 @@
     <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%;" Name="DateTo" @bind-Value=@this.TTimeTo />
   </div>
 
-  <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Light" ButtonType="ButtonType.Submit"
-    Click=@selectTickerWithTime Text="" />
+  <RadzenButton ButtonStyle="ButtonStyle.Light" ButtonType="ButtonType.Submit"
+    Click=@selectTickerWithTime Text="Submit" />
 </RadzenTemplateForm>
 
 @code {
@@ -183,8 +185,8 @@
     mTimeFrom = TTimeFrom.ToString().Substring(0, 10);
     mTimeTo = TTimeTo.ToString().Substring(0, 10);
 
-    string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime + "/range/" + mMultipler
-    + "/" + mTimeSpan + "/" + mTimeFrom + "/" + mTimeTo +
+    string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime + "/range/" + "1"
+    + "/" + "month" + "/" + mTimeFrom + "/" + mTimeTo +
     "?adjusted=true&sort=asc&limit=50000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
 
 

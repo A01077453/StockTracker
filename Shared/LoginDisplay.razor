@@ -1,10 +1,14 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<div id="dashboardHeader" style="font-size: 20pt; color: black;">
+  <b>DASHBOARD</b>
+</div>
+  
 <AuthorizeView>
 
   <Authorized>
-    <a class="nav-link text-dark" href="Identity/Account/Manage">Hello, @context.User.Identity.Name</a>
-    <form method="post" action="Identity/Account/Logout">
-      <button type="submit" class="nav-link btn">Log out</button>
-    </form>
   </Authorized>
 
   <NotAuthorized>

@@ -50,6 +50,11 @@
     color: white;
 }
 
+#sideNav {
+    background-image: url("https://vmsseaglescall.org/wp-content/uploads/2019/10/Screen-Shot-2019-10-25-at-11.22.36-AM.png");
+    background-repeat: repeat;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;

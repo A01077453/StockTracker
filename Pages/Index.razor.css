@@ -12,13 +12,24 @@
     border: 1px;
     border-style: solid;
 }
-.favourites {
+.rightContainer {
   width: 100%;
   text-align: center;
   border: 1px;
   border-style: solid;
   display: flex;
   flex-direction: column;
+}
+
+#searchTickerContainer {
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
+#border {
+  border: 1px solid black;
 }
 
 .news {
@@ -41,4 +52,11 @@ li {
 #newsContainer {
   padding-left: 20px;
   padding-right: 20px;
+}
+
+#favouritesContainer {
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
 }
