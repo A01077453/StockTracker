@@ -1,46 +1,32 @@
 ﻿@page "/lineGraphs"
 @using System.Globalization
 
-  
 
-<RadzenCheckBoxList @bind-Value=@values TValue="int" Change=@OnChange>
-    <Items>
-        <RadzenCheckBoxListItem Text="High" Value="1" />
-        <RadzenCheckBoxListItem Text="Close" Value="2" />
-        <RadzenCheckBoxListItem Text="Opening" Value="3" />
-        <RadzenCheckBoxListItem Text="Low" Value="4" />
-    </Items>
-</RadzenCheckBoxList>
+<div class="col-md-12 my-5">
+    <RadzenChart>
+        <RadzenLineSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019"
+            LineType="LineType.Dashed" ValueProperty="Revenue">
+            <RadzenMarkers MarkerType="MarkerType.Square" />
+        </RadzenLineSeries>
+        <RadzenLineSeries Smooth="@smooth" Data="@revenue2020" CategoryProperty="Date" Title="2020"
+            ValueProperty="Revenue">
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
+        </RadzenLineSeries>
+        <RadzenCategoryAxis Padding="20" FormatString="{0:MMM}" />
+        <RadzenValueAxis Formatter="@FormatAsUSD">
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Revenue in USD" />
+        </RadzenValueAxis>
+    </RadzenChart>
+</div>
 
-            <div class="col-md-12 my-5" style="height:20em;">
-                <RadzenCard Class="w-100 mb-4" >
-                    <RadzenCheckBox @bind-Value="@smooth" Name="smooth"></RadzenCheckBox>
-                    <RadzenLabel Text="Smooth" For="smooth" Style="margin-left: 8px; vertical-align: middle;" />
-                </RadzenCard>
-                <RadzenChart>
-                    <RadzenLineSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019" LineType="LineType.Dashed" ValueProperty="Revenue">
-                        <RadzenMarkers MarkerType="MarkerType.Square" />
-                    </RadzenLineSeries>
-                    <RadzenLineSeries Smooth="@smooth" Data="@revenue2020" CategoryProperty="Date" Title="2020" ValueProperty="Revenue">
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    </RadzenLineSeries>
-                    <RadzenCategoryAxis Padding="20" FormatString="{0:MMM}" />
-                    <RadzenValueAxis Formatter="@FormatAsUSD">
-                        <RadzenGridLines Visible="true" />
-                        <RadzenAxisTitle Text="Revenue in USD" />
-                    </RadzenValueAxis>
-                </RadzenChart>
-            </div>
 
-      
-    
-    
-   <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link href="StockTracker.styles.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+<link href="css/site.css" rel="stylesheet" />
+<link href="StockTracker.styles.css" rel="stylesheet" />
 
 @code {
-  
+
     [Parameter]
     public string lineGraphSize { get; set; }
 
@@ -57,132 +43,132 @@
     }
 
     DataItem[] revenue2019 = new DataItem[] {
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-01-21"),
-            Revenue = 234000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-02-21"),
-            Revenue = 269000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-03-21"),
-            Revenue = 233000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-04-21"),
-            Revenue = 244000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-05-21"),
-            Revenue = 214000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-06-21"),
-            Revenue = 253000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-07-11"),
-            Revenue = 274000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-08-21"),
-            Revenue = 284000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-09-21"),
-            Revenue = 273000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-10-21"),
-            Revenue = 282000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-11-21"),
-            Revenue = 289000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-12-21"),
-            Revenue = 294000
-        }
-    };
+new DataItem
+{
+Date = DateTime.Parse("2019-01-21"),
+Revenue = 234000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-02-21"),
+Revenue = 269000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-03-21"),
+Revenue = 233000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-04-21"),
+Revenue = 244000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-05-21"),
+Revenue = 214000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-06-21"),
+Revenue = 253000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-07-11"),
+Revenue = 274000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-08-21"),
+Revenue = 284000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-09-21"),
+Revenue = 273000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-10-21"),
+Revenue = 282000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-11-21"),
+Revenue = 289000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-12-21"),
+Revenue = 294000
+}
+};
 
     DataItem[] revenue2020 = new DataItem[] {
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-01-21"),
-            Revenue = 334000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-02-11"),
-            Revenue = 369000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-03-11"),
-            Revenue = 333000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-04-11"),
-            Revenue = 344000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-05-11"),
-            Revenue = 314000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-06-21"),
-            Revenue = 353000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-07-01"),
-            Revenue = 374000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-08-01"),
-            Revenue = 384000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-09-01"),
-            Revenue = 373000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-10-01"),
-            Revenue = 382000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-11-01"),
-            Revenue = 389000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-12-01"),
-            Revenue = 394000
-        }
-    };
+new DataItem
+{
+Date = DateTime.Parse("2019-01-21"),
+Revenue = 334000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-02-11"),
+Revenue = 369000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-03-11"),
+Revenue = 333000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-04-11"),
+Revenue = 344000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-05-11"),
+Revenue = 314000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-06-21"),
+Revenue = 353000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-07-01"),
+Revenue = 374000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-08-01"),
+Revenue = 384000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-09-01"),
+Revenue = 373000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-10-01"),
+Revenue = 382000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-11-01"),
+Revenue = 389000
+},
+new DataItem
+{
+Date = DateTime.Parse("2019-12-01"),
+Revenue = 394000
+}
+};
 
-     IEnumerable<int> values = new int[] { 1 };
+    IEnumerable<int> values = new int[] { 1 };
 
     void OnChange(IEnumerable<int> value)
     {
