@@ -8,12 +8,12 @@
 </head>
 
 <body>
-    <div style="border: 2px solid gainsboro; border-radius: 8px; padding: 20px; background: white;">
+    <div style="border: 2px solid gainsboro; border-radius: 8px; padding: 30px; background: white;">
         <div style="display: grid; grid-template-columns: 78.8% 10% 10%; column-gap: 5px;">
             <h1>My Account</h1>
 
             <a href="~/" style="text-decoration: none;">
-                <button type="button" class="btn btn-success"
+                <button type="button" class="btn btn-outline-primary"
                     style="border-radius: 7px; display: flex; align-items: center; justify-content: center; height: 50px;">
                     <b>Return</b>
                 </button>
@@ -30,11 +30,11 @@
 
         <div>
             <hr />
-            <div class="row">
-                <div class="col-md-3">
+            <div class="row" style="margin-top: -16px;">
+                <div class="col-md-3" style="background-color: aliceblue; border-right: 2px gainsboro solid; padding-top: 20px;">
                     <partial name="_ManageNav" />
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-9" style="padding-top: 20px;">
                     @RenderBody()
                 </div>
             </div>
