@@ -12,14 +12,15 @@
   <div class="rightContainer">
     <div id="searchTickerContainer">
       <h3>Search a Ticker</h3>
-      <TestStock/>
+      <TestStock @ref="stock" />
     </div>
 
     <div id="border"></div>
 
     <div id="favouritesContainer">
       <h3>Favourites</h3>
-      
+      <Favourites/>
+      <button @onclick=@balls>Click Me</button>
     </div>
   </div>
 
@@ -28,6 +29,19 @@
 <div class="news">
   <br>
   <div id="newsContainer">
-    <News />
+    @* <News /> *@
   </div>
 </div>
+
+@code {
+  private TestStock? stock; //Component variable
+
+  public void balls()
+  {
+    @foreach (var stat in stock?.mCurrentStock?.results!)
+    {
+      Console.WriteLine(stat.c);
+    }
+  }
+
+}

@@ -1,12 +1,7 @@
-﻿@page "/stocks"
-@attribute [Authorize]
-<PageTitle>Stocks</PageTitle>
-
+@page "/favourites"
+@using Data
 @using StockTracker.Data;
-@inject StockService stockService
-
-<h1>Currents stocks</h1>
-
+@inject StockService stockService;
 
 @if (stocks == null)
 {
@@ -14,27 +9,26 @@
 }
 else
 {
-  <table class='table table-hover'>
-  <thead>
-    <tr>
-      <th>Ticker</th>
-      <th>UserId</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var item in stocks)
-      {
+  <div>
+    <table class='table table-hover' style="display: table">
+    <thead>
         <tr>
-          <td>@item.ticker</td>
-          <td>@item.userId</td>
+        <th>Ticker</th>
+        <th>UserId</th>
         </tr>
-      }
-    </tbody>
-  </table>
+    </thead>
+    <tbody>
+        @foreach (var item in stocks)
+        {
+            <tr>
+            <td>@item.ticker</td>
+            <td>@item.userId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+  </div>
 }
-
-  <input type="text" @bind="Ticker" />
-<button class="btn btn-dark " @onclick="AddStock" />
 
 @code {
   List<Stock>? stocks;
