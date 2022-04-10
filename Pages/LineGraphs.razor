@@ -14,10 +14,10 @@
 @using StockTracker.Data;
 @using System.Runtime.Serialization
 
-<div class="col-md-12 my-5" style="background-color: blue;">
+<div class="col-md-12 my-5">
     <RadzenChart >
-        <RadzenLineSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019"
-            LineType="LineType.Dashed" ValueProperty="Revenue">
+        <RadzenLineSeries Smooth="@smooth" Data="@yearlyData" CategoryProperty="Date" Title="2020-2021"
+            LineType="LineType.Dashed" ValueProperty="closingPrice">
             <RadzenMarkers MarkerType="MarkerType.Square" />
         </RadzenLineSeries>
         <RadzenCategoryAxis Padding="20" FormatString="{0:MMM}" />
@@ -28,7 +28,6 @@
     </RadzenChart>
 </div>
 
-
 <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
 <link href="css/site.css" rel="stylesheet" />
 <link href="StockTracker.styles.css" rel="stylesheet" />
@@ -38,13 +37,17 @@
     private string? mJsonRes;
     HttpClient httpClient = new HttpClient();
 
+    private List<DataItem> yearlyData = new List<DataItem>();
+
+    @* Graph Components *@
     [Parameter]
     public string? lineGraphSize { get; set; }
     bool smooth = false;
+
     class DataItem
     {
-        public DateTime Date { get; set; }
-        public double Revenue { get; set; }
+        public String? Date { get; set; }
+        public double closingPrice { get; set; }
     }
 
     string FormatAsUSD(object value)
@@ -52,143 +55,11 @@
         return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
     }
 
-    DataItem[] revenue2019 = new DataItem[] {
-new DataItem
-{
-Date = DateTime.Parse("2019-01-21"),
-Revenue = 234000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-02-21"),
-Revenue = 269000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-03-21"),
-Revenue = 233000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-04-21"),
-Revenue = 244000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-05-21"),
-Revenue = 214000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-06-21"),
-Revenue = 253000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-07-11"),
-Revenue = 274000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-08-21"),
-Revenue = 284000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-09-21"),
-Revenue = 273000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-10-21"),
-Revenue = 282000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-11-21"),
-Revenue = 289000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-12-21"),
-Revenue = 294000
-}
-};
-
-    DataItem[] revenue2020 = new DataItem[] {
-new DataItem
-{
-Date = DateTime.Parse("2019-01-21"),
-Revenue = 334000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-02-11"),
-Revenue = 369000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-03-11"),
-Revenue = 333000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-04-11"),
-Revenue = 344000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-05-11"),
-Revenue = 314000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-06-21"),
-Revenue = 353000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-07-01"),
-Revenue = 374000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-08-01"),
-Revenue = 384000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-09-01"),
-Revenue = 373000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-10-01"),
-Revenue = 382000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-11-01"),
-Revenue = 389000
-},
-new DataItem
-{
-Date = DateTime.Parse("2019-12-01"),
-Revenue = 394000
-}
-};
-
-    IEnumerable<int> values = new int[] { 1 };
-
-    void OnChange(IEnumerable<int> value)
-    {
-        Console.WriteLine($"Value changed to {string.Join(", ", value)}");
-    }
+    @* ===================// END OF GRAPH COMPONENTS //================= *@
 
     @* Fetch From API *@
-    public async Task<StockSymbol> getCurrentDayQuote(string tickerName, string dateFrom, string dateTo)
+    public async Task getYearlyGraphData(string tickerName, string dateFrom, string dateTo)
     {
-        
         string api = $"https://api.polygon.io/v2/aggs/ticker/{tickerName}/range/1/month/{dateFrom}/{dateTo}?adjusted=true&sort=asc&limit=5000&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
         string QUERY_URL;
@@ -203,7 +74,26 @@ Revenue = 394000
 
         mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
 
-        return await Task.FromResult(mCurrentStock);
+        @* Fills the Chart Data Array *@
+        foreach (var item in mCurrentStock!.results) {
+            DataItem s = new DataItem() {
+                Date = (new DateTime(1970, 1, 1)).AddMilliseconds(double.Parse(item.t.ToString())).ToString("yyyy-MM-dd").Substring(0, 10),
+                closingPrice = item.c,
+            };
+            this.yearlyData.Add(s);
+
+            await InvokeAsync(() => {
+                StateHasChanged();
+            });
+        }
+
+        foreach (var item in this.yearlyData)
+        {
+            Console.WriteLine(item.Date);
+            Console.WriteLine(item.closingPrice);
+        }
+
+        @* return await Task.FromResult(mCurrentStock); *@
     }
 
     @* MODELS for Returned JSON *@
