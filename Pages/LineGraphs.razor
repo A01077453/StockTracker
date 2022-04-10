@@ -14,16 +14,26 @@
 @using StockTracker.Data;
 @using System.Runtime.Serialization
 
-<div class="col-md-12 my-5">
-    <RadzenChart >
-        <RadzenLineSeries Smooth="@smooth" Data="@yearlyData" CategoryProperty="Date" Title="2020-2021"
-            LineType="LineType.Dashed" ValueProperty="closingPrice">
-            <RadzenMarkers MarkerType="MarkerType.Square" />
+<div class="col-md-12" id="graphContainer">
+    @if(this.mTickerName == null) {
+        <div>
+        </div>   
+    } else {
+        <div id="headerContainer">
+            <h2 style="letter-spacing: 1px;">@mTickerName</h2>
+            <span style="color: #969696; font-size: 16pt;">
+                <b>@dateFrom to @dateTo</b>
+            </span>
+        </div>   
+    }
+    <RadzenChart style="height: 500px; color: green;">
+        <RadzenLineSeries Smooth="@smooth" Data="@yearlyData" CategoryProperty="Date" Title="Price" ValueProperty="closingPrice">
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
         </RadzenLineSeries>
-        <RadzenCategoryAxis Padding="20" FormatString="{0:MMM}" />
+        <RadzenCategoryAxis Padding="0" FormatString="{0:MMM}" />
         <RadzenValueAxis Formatter="@FormatAsUSD">
             <RadzenGridLines Visible="true" />
-            <RadzenAxisTitle Text="Price(USD)" />
+            <RadzenAxisTitle Text="Stock Price (USD)" />
         </RadzenValueAxis>
     </RadzenChart>
 </div>
@@ -36,8 +46,10 @@
     public StockSymbol? mCurrentStock;
     private string? mJsonRes;
     HttpClient httpClient = new HttpClient();
-
     private List<DataItem> yearlyData = new List<DataItem>();
+    private String? dateFrom = null;
+    private String? dateTo = null;
+    private String? mTickerName = null;
 
     @* Graph Components *@
     [Parameter]
@@ -60,7 +72,16 @@
     @* Fetch From API *@
     public async Task getYearlyGraphData(string tickerName, string dateFrom, string dateTo)
     {
+        @* Clear Variables *@
         this.yearlyData.Clear();
+        this.dateFrom = null;
+        this.dateTo = null;
+        this.mTickerName = null;
+
+        @* Setting Dates for Display *@
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.mTickerName = tickerName;
 
         string api = $"https://api.polygon.io/v2/aggs/ticker/{tickerName}/range/1/month/{dateFrom}/{dateTo}?adjusted=true&sort=asc&limit=5000&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
@@ -76,6 +97,10 @@
 
         mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
 
+        @* Error Handling *@
+        
+        Console.WriteLine(mCurrentStock!.status);   
+
         @* Fills the Chart Data Array *@
         foreach (var item in mCurrentStock!.results) {
             DataItem s = new DataItem() {
@@ -87,12 +112,6 @@
             await InvokeAsync(() => {
                 StateHasChanged();
             });
-        }
-
-        foreach (var item in this.yearlyData)
-        {
-            Console.WriteLine(item.Date);
-            Console.WriteLine(item.closingPrice);
         }
     }
 

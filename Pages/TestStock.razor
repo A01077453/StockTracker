@@ -11,13 +11,14 @@
 @using Newtonsoft.Json.Serialization
 @using StockTracker.Data;
 @using System.Runtime.Serialization
+@using System.Globalization
 @inject StockService stockService;
 
 @* HTML CONTENT *@
 <div id="mainContainer">
   <RadzenTemplateForm Data=@this>
     @* Ticker Box *@
-    <RadzenAutoComplete Style="width: 100%;" @bind-Value=@this.mTickerName />
+    <RadzenAutoComplete Style="width: 100%;" @bind-Value=@this.mTickerName Placeholder="Enter a Ticker" />
     @if (this.errorFlag)
           {
             <RadzenLabel Text=@this.errorMsg style="color: red; font-weight: bold;" />
@@ -26,8 +27,11 @@
           {
             <RadzenLabel Text=@this.errorMsg style="color: red; font-weight: bold;" />
           }
-
-    @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
+          @if (this.errorAPIStatusFlag)
+          {
+            <RadzenLabel Text=@this.errorMsg style="color: red; font-weight: bold;" />
+          }
+          @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
     @if (mCurrentStock != null)
           {
             <div id="stockStatisticsContainer">
@@ -48,7 +52,6 @@
               <hr style="margin-top: -0px;">
             </div>
           }
-
           <div>
             <RadzenLabel Text="From" />
           </div>
@@ -70,10 +73,14 @@
             }
           </div>
           <br>
-          <RadzenSplitButton Click=@submit Text="Submit" style="font-weight: bold;">
+          @if (this.errorAddStockFlag)
+          {
+            <RadzenLabel Text=@this.errorStockMsg style="color: red; font-weight: bold;" />
+          }
+          <RadzenSplitButton Click=@(() => Submit.InvokeAsync(@mTickerName)) Text="Submit" style="font-weight: bold;">
             <ChildContent>
               <button @onclick="AddStock">
-                <RadzenSplitButtonItem Text="Add Ticker to Favourites" Value="1" Icon="add_task" />
+                <RadzenSplitButtonItem Text="Add Ticker to Watchlist" Icon="add_task" />
               </button>
             </ChildContent>
           </RadzenSplitButton>
@@ -83,29 +90,29 @@
       @code {
   HttpClient httpClient = new HttpClient();
   public StockSymbol? mCurrentStock;
-  private StockSymbol? mSelectedStockWithTime;
-  private StockSymbol? mAllTickers;
   public string? mTickerName;
   private string? mJsonRes;
-  private string? mTickerNameWithTime;
   private List<string>? mTickersList = new List<string>();
-  private string? mMultipler;
-  private string? mTimeSpan;
-  private string? mFavoriteStock;
   private List<string>? mStockTimeSpan = new List<string> { "minute", "hour", "day", "week", "month", "quarter", "year" };
   private DateTime? TTimeFrom;
   private DateTime? TTimeTo;
-  private string? mTimeFrom;
-  private string? mTimeTo;
+  public string? mTimeFrom;
+  public string? mTimeTo;
 
   @* ERROR Message *@
   private string? errorMsg;
+  private string? errorStockMsg;
   private Boolean errorFlag = false;
   private Boolean errorLetterOnlyFlag = false;
   private Boolean errorDateFromFlag = false;
   private Boolean errorDateToFlag = false;
+  private Boolean errorAPIStatusFlag = false;
+  private Boolean errorAddStockFlag = true; //Not allowed to add until after validation from API
 
-  public async Task? submit()
+  [Parameter]
+  public EventCallback<string> Submit { get; set; }
+
+  public async Task? submit(string tickerName)
   {
     @* Flag Reset *@
     this.errorFlag = false;
@@ -114,7 +121,7 @@
     this.errorDateToFlag = false;
 
     @* Validates for Non-empty String *@
-    if (String.IsNullOrEmpty(this.mTickerName))
+    if (String.IsNullOrEmpty(tickerName))
     {
       this.errorFlag = !(errorFlag);
       this.errorMsg = "Ticker cannot be empty";
@@ -122,7 +129,7 @@
     }
 
     @* Validates for Letters Only *@
-    if (!Regex.IsMatch(this.mTickerName, @"^[a-zA-Z]+$"))
+    if (!Regex.IsMatch(tickerName, @"^[a-zA-Z]+$"))
     {
       this.errorLetterOnlyFlag = !(errorLetterOnlyFlag);
       this.errorMsg = "Ticker must only contain letters";
@@ -145,37 +152,39 @@
       return;
     }
 
+    @* Parse and Convert Date Returned *@
     this.mTimeFrom = TTimeFrom.ToString()!.Substring(0, 9);
     this.mTimeTo = TTimeTo.ToString()!.Substring(0, 9);
 
+    DateTime dateFrom = new DateTime();
+    dateFrom = Convert.ToDateTime(mTimeFrom);
+    this.mTimeFrom = dateFrom.ToString("yyyy-MM-dd");
+
+    DateTime dateTo = new DateTime();
+    dateTo = Convert.ToDateTime(mTimeTo);
+    this.mTimeTo = dateTo.ToString("yyyy-MM-dd");
 
     @* Regex to Remove Whitespace and Convert to UpperCase *@
-    this.mTickerName = Regex.Replace(this.mTickerName!.ToString()!.ToUpper()!.Trim(), @"\s+", "");
+    tickerName = Regex.Replace(tickerName!.ToString()!.ToUpper()!.Trim(), @"\s+", "");
+    this.mTickerName = tickerName;
 
-    Console.WriteLine("Test: " + this.mTimeTo + " Ticker Name: " + this.mTickerName);
-
-    await getCurrentDayQuote(this.mTickerName);
-
+    getCurrentDayQuote(tickerName);
   }
-
   protected override async Task OnInitializedAsync()
   {
     await load(); //Load Favorite Stocks
   }
 
   @* A helper function that gets the tickerName from search bar and fires API *@
-  public async Task<StockSymbol> getCurrentDayQuote(string tickerName)
+  public async void getCurrentDayQuote(string tickerName)
   {
+    this.mCurrentStock = null;
+    this.mJsonRes = null;
 
     @* API Call 1: Get Most Recent Day Quotas *@
     string aaplDetail = "https://api.polygon.io/v2/aggs/ticker/" + tickerName +
         "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
 
-    @* API Call 2: Get Chart Data From Selected Dates *@
-    @* string chartData = "https://api.polygon.io/v2/aggs/ticker/" + tickerName +
-      "/prev?adjusted=true&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF"; *@
-
-    @* API CALL: Stock Quote for Previous Day *@
     string QUERY_URL;
 
     QUERY_URL = aaplDetail;
@@ -186,11 +195,24 @@
 
     mJsonRes = await response.Content.ReadAsStringAsync(); //String
 
-    @* Error Handling Here *@
+    mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
 
-    mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);  
+    Console.WriteLine(this.errorMsg);
 
-    return await Task.FromResult(mCurrentStock);
+    @* Error Handling *@
+    if (mCurrentStock!.resultsCount == 0)
+    {
+      this.errorAPIStatusFlag = !(errorAPIStatusFlag);
+      this.errorMsg = "Invalid Ticker Symbol was placed!";
+      return;
+    }
+
+    this.errorAddStockFlag = !(errorAddStockFlag);
+
+    await InvokeAsync(() =>
+    {
+      StateHasChanged();
+    });
   }
 
   @* MODELS for Returned JSON *@
@@ -231,6 +253,13 @@
   }
   protected async Task AddStock()
   {
+    @* Check if invalid tickerName *@
+    if (this.errorAddStockFlag == true)
+    {
+      this.errorStockMsg = "Invalid Stock Symbol!";
+      return;
+    }
+
     var user = (await AuthStat).User;
     UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value!;
 
@@ -245,11 +274,13 @@
       userId = UserId
     };
 
+    if(stockService.StockExists(s.ticker)) {
+      this.errorAddStockFlag = true;
+      this.errorStockMsg = "Stock is already in your watchlist!";
+      return;
+    }
+
     await stockService.InsertStockAsync(s);
 
-    StateHasChanged();
   }
-
-  @* Error mJsonRes Classes *@
-
 }

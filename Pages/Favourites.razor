@@ -9,7 +9,7 @@
 }
 else
 {
-    <table class='table table-hover'>
+    <table class='table table-hover' style="width: 80%; margin-left: auto; margin-right: auto;">
     <thead>
         <tr>
             <th>
@@ -44,7 +44,7 @@ else
     [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
     String? Ticker;
     String? UserId;
-    
+
     [Parameter] 
     public EventCallback<string> View { get; set; }
 
@@ -56,20 +56,6 @@ else
     protected async Task load()
     {
         stocks = await stockService.GetStocksAsync();
-    }
-
-    protected async Task AddStock()
-    {
-        var user = (await AuthStat).User;
-        UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value!;
-
-        Stock s = new Stock()
-        {
-            ticker = Ticker,
-            userId = UserId
-        };
-
-        await stockService.InsertStockAsync(s);
     }
 
     protected async Task Delete(string tickerName)

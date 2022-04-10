@@ -19,7 +19,7 @@
 }
 
 .nav-item {
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding-bottom: 0.5rem;
 }
 
@@ -51,8 +51,8 @@
 }
 
 #sideNav {
-    background-image: url("https://vmsseaglescall.org/wp-content/uploads/2019/10/Screen-Shot-2019-10-25-at-11.22.36-AM.png");
-    background-repeat: repeat;
+    background-image: url("https://cdn.pixabay.com/photo/2016/05/05/02/37/sunset-1373171_1280.jpg");
+    text-align: center;
 }
 
 @media (min-width: 641px) {
