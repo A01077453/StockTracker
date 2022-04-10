@@ -1,11 +1,8 @@
 #stockStatisticsContainer {
     display: grid;
     grid-template-rows: auto auto;
-}
-
-#stockTickerName {
-    display: grid;
-    grid-template-columns: 50% 50%;
+    /* padding-top: 10px;
+    padding-bottom: 10px; */
 }
 
 #quoteContainer {

@@ -5,60 +5,77 @@
 
 @if (stocks == null)
 {
-  <p><em>Loading...</em></p>
+    <p><em>Loading...</em></p>
 }
 else
 {
-  <table class='table table-hover'>
+    <table class='table table-hover'>
     <thead>
-      <tr>
-        <th>Ticker</th>
-        <th>UserId</th>
-      </tr>
+        <tr>
+            <th>
+                <span style="color: #969696;">Ticker</span>
+            </th>
+            <th>
+                <span style="color: #969696;">Actions</span>
+            </th>
+        </tr>
     </thead>
     <tbody>
-      @foreach (var item in stocks)
-        {
-          <tr>
-            <td>@item.ticker</td>
-            <td>
-              <button>View</button>
-              <button>Delete</button>
-            </td>
-          </tr>
-        }
-      </tbody>
+        @foreach (var item in stocks)
+            {
+                <tr>
+                    <td style="padding-top: 30px;"><b>@item.ticker</b></td>
+                    <td style="width: 40%;">
+                        <div id="buttonContainer">
+                            <RadzenButton Text="View" Click=@(() => View.InvokeAsync(@item!.ticker!)) ButtonStyle="ButtonStyle.Info"
+                        style=" font-weight: bold;" />
+                            <RadzenButton Text="Delete" Click=@(() => Delete(@item!.ticker!)) ButtonStyle="ButtonStyle.Danger"
+                        style=" font-weight: bold;" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
 
 @code {
-  List<Stock>? stocks;
-  [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
-  String? Ticker;
-  String? UserId;
+    List<Stock>? stocks;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+    String? Ticker;
+    String? UserId;
+    
+    [Parameter] 
+    public EventCallback<string> View { get; set; }
 
-  protected override async Task OnInitializedAsync()
-  {
-    await load();
-  }
-
-  protected async Task load()
-  {
-    stocks = await stockService.GetStocksAsync();
-  }
-
-  protected async Task AddStock()
-  {
-    var user = (await AuthStat).User;
-    UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value!;
-
-    Stock s = new Stock()
+    protected override async Task OnInitializedAsync()
     {
-      ticker = Ticker,
-      userId = UserId
-    };
+        await load();
+    }
 
-    await stockService.InsertStockAsync(s);
-    await load();
-  }
+    protected async Task load()
+    {
+        stocks = await stockService.GetStocksAsync();
+    }
+
+    protected async Task AddStock()
+    {
+        var user = (await AuthStat).User;
+        UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value!;
+
+        Stock s = new Stock()
+        {
+            ticker = Ticker,
+            userId = UserId
+        };
+
+        await stockService.InsertStockAsync(s);
+    }
+
+    protected async Task Delete(string tickerName)
+    {
+        await stockService.DeleteStockAsync(tickerName!);
+        await load();
+    }
+
 }

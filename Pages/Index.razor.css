@@ -11,8 +11,8 @@
 .ourChart {
     border: 1px;
     border-style: solid;
-    height: 600px;
 }
+
 .rightContainer {
   width: 100%;
   text-align: center;
@@ -59,7 +59,5 @@ li {
 
 #favouritesContainer {
   padding-top: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
   padding-bottom: 10px;
 }

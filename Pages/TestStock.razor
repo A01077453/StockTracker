@@ -8,12 +8,12 @@
 @using System.Collections;
 @using System.Collections.Generic;
 @using System.Text.RegularExpressions;
+@using Newtonsoft.Json.Serialization
 @using StockTracker.Data;
+@using System.Runtime.Serialization
 @inject StockService stockService;
 
 @* HTML CONTENT *@
-<PageTitle>Test Stock API</PageTitle>
-
 <div id="mainContainer">
   <RadzenTemplateForm Data=@this>
     @* Ticker Box *@
@@ -27,13 +27,13 @@
             <RadzenLabel Text=@this.errorMsg style="color: red; font-weight: bold;" />
           }
 
-          @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
+    @* NOTE: Always have a null check to object before PAGE loads, otherwise it will app will crash *@
     @if (mCurrentStock != null)
           {
             <div id="stockStatisticsContainer">
+              <hr>
               <div id="stockTickerName">
-                <p><b>@this.mTickerName</b></p>
-                <RadzenButton>Add to Favourite</RadzenButton>
+                <p><b>Previous Day Quote for @this.mTickerName</b></p>
               </div>
 
               <div id="quoteContainer">
@@ -45,6 +45,7 @@
                   <p>Low: @stat.l</p>
                 }
               </div>
+              <hr style="margin-top: -0px;">
             </div>
           }
 
@@ -67,7 +68,6 @@
             {
               <RadzenLabel Text=@this.errorMsg style="color: red; font-weight: bold;" />
             }
-
           </div>
           <br>
           <RadzenSplitButton Click=@submit Text="Submit" style="font-weight: bold;">
@@ -80,7 +80,7 @@
         </RadzenTemplateForm>
       </div>
 
-@code {
+      @code {
   HttpClient httpClient = new HttpClient();
   public StockSymbol? mCurrentStock;
   private StockSymbol? mSelectedStockWithTime;
@@ -186,39 +186,12 @@
 
     mJsonRes = await response.Content.ReadAsStringAsync(); //String
 
-    mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
-      
+    @* Error Handling Here *@
+
+    mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);  
+
     return await Task.FromResult(mCurrentStock);
   }
-
-  public async Task<StockSymbol> selectTickerWithTime()
-  {
-    mTimeFrom = TTimeFrom.ToString().Substring(0, 10);
-    mTimeTo = TTimeTo.ToString().Substring(0, 10);
-
-    string selectTickerWithTimeURL = "https://api.polygon.io/v2/aggs/ticker/" + mTickerNameWithTime + "/range/" + "1"
-    + "/" + "month" + "/" + mTimeFrom + "/" + mTimeTo +
-    "?adjusted=true&sort=asc&limit=50000&apiKey=kjeL6fm92VSB1biHbZJWMpy3fjOqF5T0";
-
-
-    @* API CALL: Stock Quote for Previous Day *@
-    string QUERY_URL;
-
-    QUERY_URL = selectTickerWithTimeURL;
-
-    Uri queryUri = new Uri(QUERY_URL);
-
-    HttpResponseMessage response = await httpClient.GetAsync(queryUri);
-
-    mJsonRes = await response.Content.ReadAsStringAsync(); //String
-
-    mSelectedStockWithTime = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
-
-    Console.WriteLine(mJsonRes);
-
-    return await Task.FromResult(mSelectedStockWithTime);
-  }
-
 
   @* MODELS for Returned JSON *@
   public class StockSymbol
@@ -228,6 +201,9 @@
 
     [JsonPropertyName("resultsCount")]
     public int? resultsCount { get; set; }
+
+    [JsonPropertyName("status")]
+    public string? status { get; set; }
   }
 
   public class Results
@@ -271,6 +247,9 @@
 
     await stockService.InsertStockAsync(s);
 
-    this.successAddMsg = this.mTickerName + " has been successfully added to your favourites!";
+    StateHasChanged();
   }
+
+  @* Error mJsonRes Classes *@
+
 }

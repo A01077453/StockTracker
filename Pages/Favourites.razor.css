@@ -3,3 +3,9 @@
     margin-right: auto;
     background-color: aqua;
 }
+
+#buttonContainer {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 10px;
+}

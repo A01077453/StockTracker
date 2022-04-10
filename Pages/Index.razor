@@ -1,12 +1,12 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <div class="wrapper">
 
   <div class="ourChart">
     <p>Chart place holder</p>
-    <LineGraphs />
+    <LineGraphs @ref="graph"/>
   </div>
 
   <div class="rightContainer">
@@ -19,9 +19,8 @@
 
     <div id="favouritesContainer">
       <h3>Favourites</h3>
-      <div style="height: 200px; overflow-y: scroll;">
-
-        <Favourites />
+      <div style="height: 234px; width: 100%; overflow-y: scroll; padding-top: 5px;">
+        <Favourites @ref="table" View="FavouritesSetTickerName"/>
       </div>
     </div>
   </div>
@@ -31,18 +30,51 @@
 <div class="news">
   <br>
   <div id="newsContainer">
-    <News />
+    @* <News /> *@
   </div>
 </div>
 
+<button @onclick="balls">Hit ME</button>
+
 @code {
-  private TestStock? stock; //Component variable
+  @* Global Ticker Name *@
+  private String? global_tickerName = null;
+
+  //Component variables
+  private TestStock? stock; 
+  private Favourites? table; 
+  private LineGraphs? graph; 
+
+  @* Sets the global_tickerName for Favourites *@
+  public async void FavouritesSetTickerName(string tickerName)
+  {
+    //Reset the global_tickerName
+    this.global_tickerName = null;
+
+    //Set tickerName
+    this.global_tickerName = tickerName;
+
+    var today = DateTime.Now.ToString("yyyy-MM-dd"); //From Date
+    var lastYear = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd"); //To Date
+
+    Console.WriteLine(today);
+    Console.WriteLine(lastYear);
+
+    //Call and Invoke API Function from Favourites Object + Seed Chart
+    await graph!.getCurrentDayQuote(this.global_tickerName, lastYear, today);
+
+    foreach (var item in graph!.mCurrentStock!.results)
+    {
+      Console.WriteLine(item.c);
+    }
+
+  }
 
   public void balls()
   {
     @foreach (var stat in stock?.mCurrentStock?.results!)
     {
-      Console.WriteLine(stat.c);
+      Console.WriteLine(stat.T);
     }
   }
 
