@@ -1,23 +1,27 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <div class="wrapper">
 
   <div class="ourChart">
-    <p>Chart place holder</p>
-    <LineGraphs />
+    <LineGraphs @ref="graph" />
   </div>
 
-  <div class="favourites">
-    <h3>Favourites</h3>
-    @*<div>
-      <input type="search" name="" id="">
-      <button class="btn-dark">
-      <i class="oi oi-magnifying-glass"></i>
-      </button>
-      </div>*@
-      <TestStock />
+  <div class="rightContainer">
+    <div id="searchTickerContainer">
+      <h3>Search a Ticker</h3>
+      <TestStock @ref="stock" Submit="SearchSetTickerName" />
+    </div>
+
+    <div id="border"></div>
+
+    <div id="favouritesContainer">
+      <h3>My Watchlist</h3>
+      <div style="height: 240px; width: 100%; overflow-y: scroll; padding-top: 5px;">
+        <Favourites @ref="table" View="FavouritesSetTickerName" />
+      </div>
+    </div>
   </div>
 
 </div>
@@ -25,6 +29,49 @@
 <div class="news">
   <br>
   <div id="newsContainer">
-    <News/>
+    <News />
   </div>
 </div>
+
+@code {
+  @* Global Ticker Name *@
+  private String? global_tickerName = null;
+
+  //Component variables
+  private TestStock? stock;
+  private Favourites? table;
+  private LineGraphs? graph;
+
+  @* Sets the global_tickerName from Favourites *@
+  public async void FavouritesSetTickerName(string tickerName)
+  {
+    //Reset the global_tickerName
+    this.global_tickerName = null;
+
+    //Set tickerName
+    this.global_tickerName = tickerName;
+
+    var today = DateTime.Now.ToString("yyyy-MM-dd"); //From Date
+    var lastYear = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd"); //To Date
+
+    //Call and Invoke API Function from Favourites Object + Seed Chart
+    await graph!.getYearlyGraphData(this.global_tickerName, lastYear, today);
+  }
+
+  public async void SearchSetTickerName(string tickerName)
+  {
+    //Reset the global_tickerName
+    this.global_tickerName = null;
+
+    //Uses ticker name internally + loads 2 API calls
+    await stock!.submit(tickerName); 
+
+    if(stock!.mTickerName == null || stock!.mTimeFrom == null || stock!.mTimeTo == null) {
+      return;
+    }
+
+    //Call and Invoke API Function from Favourites Object + Seed Chart
+    await graph!.getYearlyGraphData(stock!.mTickerName, stock!.mTimeFrom, stock!.mTimeTo);
+  }
+
+}

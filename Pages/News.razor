@@ -12,12 +12,10 @@
 @inject IJSRuntime JS
 
 @* HTML CONTENT *@
-<PageTitle>News Page</PageTitle>
-
 <div id="newsTitleSearchContainer">
   <h3>News</h3>
   <RadzenTextBox style="margin-top: -2px;" @bind-Value=@mNewsTickerName TValue="string"  />
-  <RadzenButton style="margin-top: -2px;" Click=@storeNewsAsEnum Text="Search" />
+  <RadzenButton style="margin-top: -2px; font-weight: bold;" Click=@storeNewsAsEnum Text="Search"/>
 </div>
 
 <RadzenDataList @ref="RadzenNewsDataList" WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
@@ -61,10 +59,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         await storeNewsAsEnum();
-
-
     }
 
     public async Task<int> storeNewsAsEnum()
