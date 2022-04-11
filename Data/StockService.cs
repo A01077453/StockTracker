@@ -49,7 +49,7 @@ public class StockService {
         return Stock;
       }
 
-      private bool StockExists(string ticker) {
+      public bool StockExists(string ticker) {
         return _context.Stocks.Any(e => e.ticker == ticker);
       }
 }

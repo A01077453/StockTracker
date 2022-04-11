@@ -8,6 +8,7 @@ using StockTracker.Data;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using StockTracker.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,8 @@ builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStat
 builder.Services.AddDefaultIdentity<IdentityUser>()
   .AddEntityFrameworkStores<StockDbContext>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<StockDbContext>(options =>
+builder.Services.AddDbContext<StockTrackerIdentityDbContext>(options =>
+    options.UseSqlServer(connectionString));builder.Services.AddDbContext<StockDbContext>(options =>
     options.UseSqlite(connectionString));
 
 // For Blazorize Bootstrap

@@ -1,54 +1,65 @@
 ﻿@page "/lineGraphs"
 @using System.Globalization
+@using System.Text.Json.Serialization
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
+@using System;
+@using System.Linq;
+@using System.Text.Json.Serialization;
+@using System.Text.Json;
+@using Newtonsoft.Json
+@using System.Collections;
+@using System.Collections.Generic;
+@using System.Text.RegularExpressions;
+@using Newtonsoft.Json.Serialization
+@using StockTracker.Data;
+@using System.Runtime.Serialization
 
-  
+<div class="col-md-12" id="graphContainer">
+    @if(this.mTickerName == null) {
+        <div>
+        </div>   
+    } else {
+        <div id="headerContainer">
+            <h2 style="letter-spacing: 1px;">@mTickerName</h2>
+            <span style="color: #969696; font-size: 16pt;">
+                <b>@dateFrom to @dateTo</b>
+            </span>
+        </div>   
+    }
+    <RadzenChart style="height: 500px; color: green;">
+        <RadzenLineSeries Smooth="@smooth" Data="@yearlyData" CategoryProperty="Date" Title="Price" ValueProperty="closingPrice">
+            <RadzenMarkers MarkerType="MarkerType.Circle" />
+        </RadzenLineSeries>
+        <RadzenCategoryAxis Padding="0" FormatString="{0:MMM}" />
+        <RadzenValueAxis Formatter="@FormatAsUSD">
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Stock Price (USD)" />
+        </RadzenValueAxis>
+    </RadzenChart>
+</div>
 
-<RadzenCheckBoxList @bind-Value=@values TValue="int" Change=@OnChange>
-    <Items>
-        <RadzenCheckBoxListItem Text="High" Value="1" />
-        <RadzenCheckBoxListItem Text="Close" Value="2" />
-        <RadzenCheckBoxListItem Text="Opening" Value="3" />
-        <RadzenCheckBoxListItem Text="Low" Value="4" />
-    </Items>
-</RadzenCheckBoxList>
-
-            <div class="col-md-12 my-5" style="height:20em;">
-                <RadzenCard Class="w-100 mb-4" >
-                    <RadzenCheckBox @bind-Value="@smooth" Name="smooth"></RadzenCheckBox>
-                    <RadzenLabel Text="Smooth" For="smooth" Style="margin-left: 8px; vertical-align: middle;" />
-                </RadzenCard>
-                <RadzenChart>
-                    <RadzenLineSeries Smooth="@smooth" Data="@revenue2019" CategoryProperty="Date" Title="2019" LineType="LineType.Dashed" ValueProperty="Revenue">
-                        <RadzenMarkers MarkerType="MarkerType.Square" />
-                    </RadzenLineSeries>
-                    <RadzenLineSeries Smooth="@smooth" Data="@revenue2020" CategoryProperty="Date" Title="2020" ValueProperty="Revenue">
-                        <RadzenMarkers MarkerType="MarkerType.Circle" />
-                    </RadzenLineSeries>
-                    <RadzenCategoryAxis Padding="20" FormatString="{0:MMM}" />
-                    <RadzenValueAxis Formatter="@FormatAsUSD">
-                        <RadzenGridLines Visible="true" />
-                        <RadzenAxisTitle Text="Revenue in USD" />
-                    </RadzenValueAxis>
-                </RadzenChart>
-            </div>
-
-      
-    
-    
-   <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link href="StockTracker.styles.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+<link href="css/site.css" rel="stylesheet" />
+<link href="StockTracker.styles.css" rel="stylesheet" />
 
 @code {
-  
-    [Parameter]
-    public string lineGraphSize { get; set; }
+    public StockSymbol? mCurrentStock;
+    private string? mJsonRes;
+    HttpClient httpClient = new HttpClient();
+    private List<DataItem> yearlyData = new List<DataItem>();
+    private String? dateFrom = null;
+    private String? dateTo = null;
+    private String? mTickerName = null;
 
+    @* Graph Components *@
+    [Parameter]
+    public string? lineGraphSize { get; set; }
     bool smooth = false;
+
     class DataItem
     {
-        public DateTime Date { get; set; }
-        public double Revenue { get; set; }
+        public DateTime? Date { get; set; }
+        public double closingPrice { get; set; }
     }
 
     string FormatAsUSD(object value)
@@ -56,137 +67,74 @@
         return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
     }
 
-    DataItem[] revenue2019 = new DataItem[] {
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-01-01"),
-            Revenue = 234000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-02-01"),
-            Revenue = 269000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-03-01"),
-            Revenue = 233000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-04-01"),
-            Revenue = 244000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-05-01"),
-            Revenue = 214000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-06-01"),
-            Revenue = 253000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-07-01"),
-            Revenue = 274000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-08-01"),
-            Revenue = 284000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-09-01"),
-            Revenue = 273000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-10-01"),
-            Revenue = 282000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-11-01"),
-            Revenue = 289000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-12-01"),
-            Revenue = 294000
-        }
-    };
+    @* ===================// END OF GRAPH COMPONENTS //================= *@
 
-    DataItem[] revenue2020 = new DataItem[] {
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-01-01"),
-            Revenue = 334000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-02-01"),
-            Revenue = 369000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-03-01"),
-            Revenue = 333000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-04-01"),
-            Revenue = 344000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-05-01"),
-            Revenue = 314000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-06-01"),
-            Revenue = 353000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-07-01"),
-            Revenue = 374000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-08-01"),
-            Revenue = 384000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-09-01"),
-            Revenue = 373000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-10-01"),
-            Revenue = 382000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-11-01"),
-            Revenue = 389000
-        },
-        new DataItem
-        {
-            Date = DateTime.Parse("2019-12-01"),
-            Revenue = 394000
-        }
-    };
-
-     IEnumerable<int> values = new int[] { 1 };
-
-    void OnChange(IEnumerable<int> value)
+    @* Fetch From API *@
+    public async Task getYearlyGraphData(string tickerName, string dateFrom, string dateTo)
     {
-        Console.WriteLine($"Value changed to {string.Join(", ", value)}");
+        @* Clear Variables *@
+        this.yearlyData.Clear();
+        this.dateFrom = null;
+        this.dateTo = null;
+        this.mTickerName = null;
+
+        @* Setting Dates for Display *@
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.mTickerName = tickerName;
+
+        string api = $"https://api.polygon.io/v2/aggs/ticker/{tickerName}/range/1/month/{dateFrom}/{dateTo}?adjusted=true&sort=asc&limit=5000&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+        string QUERY_URL;
+
+        QUERY_URL = api;
+
+        Uri queryUri = new Uri(QUERY_URL);
+
+        HttpResponseMessage response = await httpClient.GetAsync(queryUri);
+
+        mJsonRes = await response.Content.ReadAsStringAsync();
+
+        mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
+
+        @* Fills the Chart Data Array *@
+        foreach (var item in mCurrentStock!.results) {
+            DataItem s = new DataItem() {
+                Date = DateTime.Parse((new DateTime(1970, 1, 1)).AddMilliseconds(double.Parse(item.t.ToString())).ToString("yyyy-MM-dd").Substring(0, 10)),
+                closingPrice = item.c,
+            };
+            this.yearlyData.Add(s);
+
+            await InvokeAsync(() => {
+                StateHasChanged();
+            });
+        }
+    }
+
+    @* MODELS for Returned JSON *@
+    public class StockSymbol
+    {
+        [JsonPropertyName("results")]
+        public Results[]? results { get; set; }
+
+        [JsonPropertyName("resultsCount")]
+        public int? resultsCount { get; set; }
+
+        [JsonPropertyName("status")]
+        public string? status { get; set; }
+    }
+
+    public class Results
+    {
+        public string? T { get; set; }
+        public double c { get; set; }
+        public double h { get; set; }
+        public double l { get; set; }
+        public double o { get; set; }
+        public double t { get; set; }
+        public double v { get; set; }
+        public double vw { get; set; }
+        public string? ticker { get; set; }
     }
 
 }

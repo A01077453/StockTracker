@@ -8,91 +8,68 @@
 @using Newtonsoft.Json
 @using System.Collections;
 @using System.Collections.Generic;
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
 
 @* HTML CONTENT *@
-<PageTitle>News Page</PageTitle>
+<div id="newsTitleSearchContainer">
+  <h3>News</h3>
+  <RadzenTextBox style="margin-top: -2px;" @bind-Value=@mNewsTickerName TValue="string"  />
+  <RadzenButton style="margin-top: -2px; font-weight: bold;" Click=@storeNewsAsEnum Text="Search"/>
+</div>
 
-@*<div id="mainContentContainer">
-  <div id="searchBarContainer">
+<RadzenDataList @ref="RadzenNewsDataList" WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
 
-  </div>
+  <Template Context="oneNews">
 
-  <div id="outerNewsContainer">
-   
-    @if(newsResults != null) {
-      @foreach (var item in newsResults?.results)
-      {
-             
-
-                <a href=@item.article_url>
-          <div id="newsContainer">
-            <div id="imageContainer">
-              <img id="newsImg" src="@item.image_url">
-            </div>
-            <h3>@item.title</h3>
-            <p style="text-decoration: none;">
-              <span style="color: royalblue"><b>@item.publisher.name</b></span>
-              | By: @item.author 
-              | Date: @DateTimeOffset.Parse(@item.published_utc).UtcDateTime.ToShortDateString()</p>
+    <RadzenCard id="newsCard" Style="width:600px;">
+      <a href=@oneNews.article_url>
+        <div class="d-flex flex-row align-items-center">
+          <RadzenImage Path="@oneNews.image_url" Class="rounded-circle float-left mr-3"
+            Style="width: 80px; height: 80px;" />
+          <div>
+            <h4 class="mb-0">@(oneNews.title)</h4>
+            <div style="color: royalblue">@oneNews.publisher?.name</div>
           </div>
-        </a>
-      }
-    }
-  </div>
-</div>*@
+        </div>
+        <hr style="border: 1px black solid; height: 1px; margin: 1rem 0;" />
+        <div class="row">
+          <div class="col-md-8 text-truncate">
+            <b> By: @oneNews.author </b>
+          </div>
+          <div class="col-md-4 text-right">
+            <RadzenBadge BadgeStyle="BadgeStyle.Secondary"
+              Text=@DateTimeOffset.Parse(@oneNews.published_utc).UtcDateTime.ToShortDateString() />
+          </div>
+        </div>
+      </a>
+    </RadzenCard>
 
-
-
-<RadzenDataList WrapItems="true" PageSize="4" AllowPaging="true" Data="@IEnumNews" TItem="News.Results">
-      
-                 <Template Context="oneNews">
-                       
-            <RadzenCard Style="width:300px;">
-                 <a href=@oneNews.article_url> 
-                <div class="d-flex flex-row align-items-center">
-                    <RadzenImage Path="@oneNews.image_url" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
-                    <div>
-                        <h4 class="mb-0">@(oneNews.title)</h4>
-                        <div>@oneNews.publisher.name</div>
-                     
-                    </div>
-                </div>
-                <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
-                <div class="row">
-                    <div class="col-md-8 text-truncate">
-                        <b> By: @oneNews.author </b>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@DateTimeOffset.Parse(@oneNews.published_utc).UtcDateTime.ToShortDateString() />
-                    </div>
-                </div>
-                 </a>
-            </RadzenCard>
-           
-        </Template>
-    </RadzenDataList>
-   
-
+  </Template>
+</RadzenDataList>
 
 @code {
     HttpClient httpClient = new HttpClient();
+    private RadzenDataList<News.Results> RadzenNewsDataList;
     private NewsObject? newsResults;
     private string? jsonRes;
     private List<News.Results>? ListsomeOfNews = new List<News.Results>();
     private IEnumerable<News.Results>? IEnumNews;
-   
+    private string? mNewsTickerName;
+
     protected override async Task OnInitializedAsync()
     {
-        await GetResultsNews();
         await storeNewsAsEnum();
-
-
     }
 
     public async Task<int> storeNewsAsEnum()
     {
 
-        for(int i = 0; i < newsResults.results.Count(); i++)
+        await GetResultsNews();
+
+        ListsomeOfNews.Clear();
+
+        for (int i = 0; i < newsResults.results.Count(); i++)
         {
             ListsomeOfNews.Add(newsResults?.results[i]);
 
@@ -100,16 +77,25 @@
 
         IEnumNews = ListsomeOfNews as IEnumerable<News.Results>;
 
+        RadzenNewsDataList.FirstPage();
         return 1;
-    }
+  }
 
-    
+
   public async Task<NewsObject> GetResultsNews()
   {
-    @* API CALL: News (sorted by most recent first), ticker to be dynamically  *@
+    @* API CALL: News (sorted by most recent first), ticker to be dynamically *@
     //Extra API KEY: 33H7QLES94CC8JMS
+
+
+    if(mNewsTickerName == null) {
+      mNewsTickerName = "AAPL";
+    }
+
     string QUERY_URL =
-        "https://api.polygon.io/v2/reference/news?ticker=AAPL&order=desc&limit=20&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+    "https://api.polygon.io/v2/reference/news?ticker=" + mNewsTickerName + "&order=desc&limit=100&apiKey=WuCRrJx5EwrJBBCjO_9FbpPEagQhdpCF";
+
+Console.WriteLine(QUERY_URL);
 
     Uri queryUri = new Uri(QUERY_URL);
 
@@ -119,7 +105,7 @@
 
     newsResults = JsonConvert.DeserializeObject<NewsObject>(jsonRes);
 
-    return await Task.FromResult(newsResults);  
+    return await Task.FromResult(newsResults);
   }
 
   @* ==============// MODELS for Returned JSON// ============== *@
@@ -147,76 +133,93 @@
     public String? title { get; set; }
   }
 
-  public class Publisher {
+  public class Publisher
+  {
     public String? favicon_url { get; set; }
     public String? homepage_url { get; set; }
     public String? logo_url { get; set; }
     public String? name { get; set; }
   }
 
-    //void PageChanged(PagerEventArgs args)
-    //{
-    //    orders = GetOrders(args.Skip, args.Top);
-    //}
+  //void PageChanged(PagerEventArgs args)
+  //{
+  // orders = GetOrders(args.Skip, args.Top);
+  //}
 
-    
+
 
 }
 
 @* =============// BELOW IS AN EXAMPLE JSON RESPONSE FOR NEWS API //=========== *@
 @* {
- "count": 1,
- "next_url": "https://api.polygon.io:443/v2/reference/news?cursor=eyJsaW1pdCI6MSwic29ydCI6InB1Ymxpc2hlZF91dGMiLCJvcmRlciI6ImFzY2VuZGluZyIsInRpY2tlciI6e30sInB1Ymxpc2hlZF91dGMiOnsiZ3RlIjoiMjAyMS0wNC0yNiJ9LCJzZWFyY2hfYWZ0ZXIiOlsxNjE5NDA0Mzk3MDAwLG51bGxdfQ",
- "request_id": "831afdb0b8078549fed053476984947a",
- "results": [
+  "count": 1,
+  "next_url":
+  "https://api.polygon.io:443/v2/reference/news?cursor=eyJsaW1pdCI6MSwic29ydCI6InB1Ymxpc2hlZF91dGMiLCJvcmRlciI6ImFzY2VuZGluZyIsInRpY2tlciI6e30sInB1Ymxpc2hlZF91dGMiOnsiZ3RlIjoiMjAyMS0wNC0yNiJ9LCJzZWFyY2hfYWZ0ZXIiOlsxNjE5NDA0Mzk3MDAwLG51bGxdfQ",
+  "request_id": "831afdb0b8078549fed053476984947a",
+  "results": [
   {
-   "amp_url": "https://amp.benzinga.com/amp/content/20784086",
-   "article_url": "https://www.benzinga.com/markets/cryptocurrency/21/04/20784086/cathie-wood-adds-more-coinbase-skillz-trims-square",
-   "author": "Rachit Vats",
-   "description": "<p>Cathie Wood-led Ark Investment Management on Friday snapped up another 221,167 shares of the cryptocurrency exchange <strong>Coinbase Global Inc </strong>(NASDAQ: <a class=\"ticker\" href=\"https://www.benzinga.com/stock/coin#NASDAQ\">COIN</a>) worth about $64.49 million on the stock&rsquo;s Friday&rsquo;s dip and also its fourth-straight loss.</p>\n<p>The investment firm&rsquo;s <strong>Ark Innovation ETF</strong> (NYSE: <a class=\"ticker\" href=\"https://www.benzinga.com/stock/arkk#NYSE\">ARKK</a>) bought the shares of the company that closed 0.63% lower at $291.60 on Friday, giving the cryptocurrency exchange a market cap of $58.09 billion. Coinbase&rsquo;s market cap has dropped from $85.8 billion on its blockbuster listing earlier this month.</p>\n<p>The New York-based company also added another 3,873 shares of the mobile gaming company <strong>Skillz Inc</strong> (NYSE: <a class=\"ticker\" href=\"https://www.benzinga.com/stock/sklz#NYSE\">SKLZ</a>), <a href=\"http://www.benzinga.com/markets/cryptocurrency/21/04/20762794/cathie-woods-ark-loads-up-another-1-2-million-shares-in-skillz-also-adds-coinbase-draftkin\">just a day after</a> snapping 1.2 million shares of the stock.</p>\n<p>ARKK bought the shares of the company which closed ...</p><p><a href=https://www.benzinga.com/markets/cryptocurrency/21/04/20784086/cathie-wood-adds-more-coinbase-skillz-trims-square alt=Cathie Wood Adds More Coinbase, Skillz, Trims Square>Full story available on Benzinga.com</a></p>",
-   "id": "nJsSJJdwViHZcw5367rZi7_qkXLfMzacXBfpv-vD9UA",
-   "image_url": "https://cdn2.benzinga.com/files/imagecache/og_image_social_share_1200x630/images/story/2012/andre-francois-mckenzie-auhr4gcqcce-unsplash.jpg?width=720",
-   "keywords": [
-    "Sector ETFs",
-    "Penny Stocks",
-    "Cryptocurrency",
-    "Small Cap",
-    "Markets",
-    "Trading Ideas",
-    "ETFs"
-   ],
-   "published_utc": "2021-04-26T02:33:17Z",
-   "publisher": {
-    "favicon_url": "https://s3.polygon.io/public/public/assets/news/favicons/benzinga.ico",
-    "homepage_url": "https://www.benzinga.com/",
-    "logo_url": "https://s3.polygon.io/public/public/assets/news/logos/benzinga.svg",
-    "name": "Benzinga"
-   },
-   "tickers": [
-    "DOCU",
-    "DDD",
-    "NIU",
-    "ARKF",
-    "NVDA",
-    "SKLZ",
-    "PCAR",
-    "MASS",
-    "PSTI",
-    "SPFR",
-    "TREE",
-    "PHR",
-    "IRDM",
-    "BEAM",
-    "ARKW",
-    "ARKK",
-    "ARKG",
-    "PSTG",
-    "SQ",
-    "IONS",
-    "SYRS"
-   ],
-   "title": "Cathie Wood Adds More Coinbase, Skillz, Trims Square"
+  "amp_url": "https://amp.benzinga.com/amp/content/20784086",
+  "article_url":
+  "https://www.benzinga.com/markets/cryptocurrency/21/04/20784086/cathie-wood-adds-more-coinbase-skillz-trims-square",
+  "author": "Rachit Vats",
+  "description": "<p>Cathie Wood-led Ark Investment Management on Friday snapped up another 221,167 shares of the
+  cryptocurrency exchange <strong>Coinbase Global Inc </strong>(NASDAQ: <a class=\"ticker\"
+  href=\"https://www.benzinga.com/stock/coin#NASDAQ\">COIN</a>) worth about $64.49 million on the stock&rsquo;s
+  Friday&rsquo;s dip and also its fourth-straight loss.</p>\n<p>The investment firm&rsquo;s <strong>Ark Innovation
+  ETF</strong> (NYSE: <a class=\"ticker\" href=\"https://www.benzinga.com/stock/arkk#NYSE\">ARKK</a>) bought the shares of
+  the company that closed 0.63% lower at $291.60 on Friday, giving the cryptocurrency exchange a market cap of $58.09
+  billion. Coinbase&rsquo;s market cap has dropped from $85.8 billion on its blockbuster listing earlier this
+  month.</p>\n<p>The New York-based company also added another 3,873 shares of the mobile gaming company <strong>Skillz
+  Inc</strong> (NYSE: <a class=\"ticker\" href=\"https://www.benzinga.com/stock/sklz#NYSE\">SKLZ</a>), <a
+  href=\"http://www.benzinga.com/markets/cryptocurrency/21/04/20762794/cathie-woods-ark-loads-up-another-1-2-million-shares-in-skillz-also-adds-coinbase-draftkin\">just
+  a day after</a> snapping 1.2 million shares of the stock.</p>\n<p>ARKK bought the shares of the company which closed
+  ...</p><p><a
+  href=https://www.benzinga.com/markets/cryptocurrency/21/04/20784086/cathie-wood-adds-more-coinbase-skillz-trims-square
+  alt=Cathie Wood Adds More Coinbase, Skillz, Trims Square>Full story available on Benzinga.com</a></p>",
+  "id": "nJsSJJdwViHZcw5367rZi7_qkXLfMzacXBfpv-vD9UA",
+  "image_url":
+  "https://cdn2.benzinga.com/files/imagecache/og_image_social_share_1200x630/images/story/2012/andre-francois-mckenzie-auhr4gcqcce-unsplash.jpg?width=720",
+  "keywords": [
+  "Sector ETFs",
+  "Penny Stocks",
+  "Cryptocurrency",
+  "Small Cap",
+  "Markets",
+  "Trading Ideas",
+  "ETFs"
+  ],
+  "published_utc": "2021-04-26T02:33:17Z",
+  "publisher": {
+  "favicon_url": "https://s3.polygon.io/public/public/assets/news/favicons/benzinga.ico",
+  "homepage_url": "https://www.benzinga.com/",
+  "logo_url": "https://s3.polygon.io/public/public/assets/news/logos/benzinga.svg",
+  "name": "Benzinga"
+  },
+  "tickers": [
+  "DOCU",
+  "DDD",
+  "NIU",
+  "ARKF",
+  "NVDA",
+  "SKLZ",
+  "PCAR",
+  "MASS",
+  "PSTI",
+  "SPFR",
+  "TREE",
+  "PHR",
+  "IRDM",
+  "BEAM",
+  "ARKW",
+  "ARKK",
+  "ARKG",
+  "PSTG",
+  "SQ",
+  "IONS",
+  "SYRS"
+  ],
+  "title": "Cathie Wood Adds More Coinbase, Skillz, Trims Square"
   }
- ],
- "status": "OK"
-} *@
+  ],
+  "status": "OK"
+  } *@

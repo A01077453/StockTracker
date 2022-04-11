@@ -38,8 +38,7 @@ else
 
 @code {
   List<Stock>? stocks;
-
-  [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+  [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
   String? Ticker;
   String? UserId;
 
