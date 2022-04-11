@@ -97,10 +97,6 @@
 
         mCurrentStock = JsonConvert.DeserializeObject<StockSymbol>(mJsonRes);
 
-        @* Error Handling *@
-        
-        Console.WriteLine(mCurrentStock!.status);   
-
         @* Fills the Chart Data Array *@
         foreach (var item in mCurrentStock!.results) {
             DataItem s = new DataItem() {
